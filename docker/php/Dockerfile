@@ -12,6 +12,7 @@ RUN apk add --no-cache \
     postgresql-dev \
     bash \
     vim \
+    jq \
     su-exec
 
 # Install PHP extensions
@@ -34,7 +35,9 @@ COPY php.ini /usr/local/etc/php/conf.d/custom.ini
 # Copy entrypoint and permission fix scripts
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY fix-permissions.sh /usr/local/bin/fix-permissions.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/fix-permissions.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/fix-permissions.sh && \
+    sed -i 's/\r$//' /usr/local/bin/entrypoint.sh && \
+    sed -i 's/\r$//' /usr/local/bin/fix-permissions.sh
 
 # Set working directory
 WORKDIR /var/www

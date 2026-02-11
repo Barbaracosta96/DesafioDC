@@ -27,11 +27,11 @@ up:
     @echo "Waiting for containers to be ready..."
     @sleep 3
     @echo "Fixing Laravel permissions..."
-    {{dc}} exec app chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database || true
-    {{dc}} exec app chmod -R 775 /var/www/storage /var/www/bootstrap/cache /var/www/database || true
+    {{dc}} exec app sh -c "chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database || true"
+    {{dc}} exec app sh -c "chmod -R 775 /var/www/storage /var/www/bootstrap/cache /var/www/database || true"
     @echo "Clearing view cache..."
     {{dc}} exec app php artisan view:clear || true
-    @echo "Containers ready! Access http://localhost"
+    @echo "Containers ready! Access http://localhost:8081"
 
 # Stop all containers
 down:
@@ -154,6 +154,13 @@ test *args:
 test-file file:
     {{dc}} exec app php artisan test {{file}}
 
+# Run API Shell Tests (Bash)
+test-api *args:
+    @echo "Ensuring dependencies..."
+    {{dc}} exec -u root app apk add --no-cache jq > /dev/null 2>&1 || true
+    @echo "Running tests..."
+    {{dc}} exec app bash /var/www/tests/run_all_tests.sh -u http://webserver {{args}}
+
 # Code Quality
 # ============
 
@@ -257,8 +264,8 @@ restart-service service:
 # Fix permissions for Laravel storage, cache, and database directories
 fix-permissions:
     @echo "Fixing Laravel permissions..."
-    {{dc}} exec app chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database
-    {{dc}} exec app chmod -R 775 /var/www/storage /var/www/bootstrap/cache /var/www/database
+    {{dc}} exec app sh -c "chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database"
+    {{dc}} exec app sh -c "chmod -R 775 /var/www/storage /var/www/bootstrap/cache /var/www/database"
     @echo "Clearing view cache..."
     {{dc}} exec app php artisan view:clear || true
     @echo "Permissions fixed successfully!"
@@ -270,8 +277,8 @@ quick-fix:
     @echo "Waiting for app to be ready..."
     @sleep 2
     @echo "Fixing permissions..."
-    {{dc}} exec app chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database
-    {{dc}} exec app chmod -R 775 /var/www/storage /var/www/bootstrap/cache /var/www/database
+    {{dc}} exec app sh -c "chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database"
+    {{dc}} exec app sh -c "chmod -R 775 /var/www/storage /var/www/bootstrap/cache /var/www/database"
     @echo "Clearing all caches..."
     {{dc}} exec app php artisan view:clear || true
     {{dc}} exec app php artisan config:clear || true
