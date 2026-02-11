@@ -1,148 +1,224 @@
-# Laravel Docker Setup - Guia de Configuração
+# Desafio Bug Hunt - Laravel
 
-## 🔧 Correções Aplicadas
+O Desafio é composto por 2 partes:
 
-### 1. Sistema de Permissões Multi-OS
-- ✅ Script robusto de correção de permissões ([docker/php/fix-permissions.sh](docker/php/fix-permissions.sh))
-- ✅ Entrypoint otimizado ([docker/php/entrypoint.sh](docker/php/entrypoint.sh))
-- ✅ Funciona em **Linux, macOS e Windows**
+1. Identificar problemas no código
+2. Corrigir os problemas no banco de dados
 
-### 2. Configuração de Banco de Dados
-- ✅ MySQL configurado em vez de SQLite ([src/.env](src/.env))
-- ✅ Conexão com container `db`
+## Parte 1: O Repositório "Bug Hunt" (Legado)
 
-### 3. Vite para SPA
-- ✅ HMR (Hot Module Replacement) configurado
-- ✅ Polling ativo para Docker
-- ✅ Porta 5173 exposta
+O objetivo aqui é avaliar a capacidade de leitura de código, depuração e conhecimento de segurança/performance.
 
-## 🚀 Como Aplicar as Correções
+### O Cenário
 
-### Opção 1: Setup Completo (Recomendado)
+Um sistema simples de Gestão de Chamados (Tickets) que está apresentando comportamentos inesperados e falhas de segurança.
 
-```bash
-# 1. Parar containers
-just down
+### Defeitos Propositais para Corrigir:
 
-# 2. Reconstruir com as novas configurações
-just build
+- **N+1 Query**: No Controller, carregar a lista de tickets sem o with('user'), causando lentidão.
 
-# 3. Iniciar containers
-just up
+- **Falha de Segurança (Mass Assignment)**: Deixar o array $guarded vazio ou $fillable amplo demais em um model sensível.
 
-# 4. Corrigir permissões
-just fix-permissions
+- **Inertia State Mix-up**: Enviar dados desnecessários para o frontend via Inertia::render, expondo hashes de senha ou dados sensíveis no JSON da página.
 
-# 5. Rodar migrations
-just migrate
+- **Bug de API**: Um endpoint que deveria retornar JSON, mas retorna um erro HTML 500 por falta de tratamento de exceção (Try/Catch ausente).
 
-# 6. Ver logs do Vite (opcional)
-just watch node
-```
+- **Validação Fraca**: Um formulário que aceita strings onde deveriam ser IDs numéricos, quebrando a integridade do banco.
 
-### Opção 2: Rebuild Rápido
-
-```bash
-# Faz tudo de uma vez: down + build + up
-just rebuild
-
-# Depois corrigir permissões e migrations
-just fix-permissions
-just migrate
-```
-
-## 📝 Comandos Úteis
-
-### Gerenciamento de Containers
-```bash
-just up          # Iniciar containers
-just down        # Parar containers
-just restart     # Reiniciar containers
-just ps          # Status dos containers
-just logs        # Ver logs de todos os serviços
-```
-
-### Laravel
-```bash
-just artisan [comando]      # Executar comandos artisan
-just migrate                # Rodar migrations
-just fresh                  # Resetar banco com seed
-just fix-permissions        # Corrigir permissões
-```
-
-### Frontend (Vite)
-```bash
-just npm install           # Instalar dependências
-just npm run dev          # Iniciar Vite (já roda automaticamente)
-just npm run build        # Build de produção
-```
-
-### Acesso Shell
-```bash
-just bash                 # Shell do container PHP
-just shell app            # Shell em qualquer container
-just mysql                # MySQL CLI
-```
-
-## 🔍 Verificação
-
-Após executar o setup, verifique:
-
-1. **Laravel funcionando**: http://localhost
-2. **Vite HMR ativo**: Porta 5173 deve estar respondendo
-3. **Banco de dados**: Tabelas criadas (incluindo `sessions`)
-4. **Logs funcionando**: Sem erros de permissão
-
-## 🐛 Troubleshooting
-
-### Erro de Permissão
-```bash
-just fix-permissions
-```
-
-### Tabela não existe
-```bash
-just migrate
-```
-
-### Vite não está atualizando
-```bash
-just restart-service node
-```
-
-### Limpar tudo e começar do zero
-```bash
-just clean    # Remove containers e dependências
-just rebuild  # Reconstrói tudo
-just fix-permissions
-just migrate
-```
-
-## 📦 Estrutura de Permissões
-
-O script `fix-permissions.sh` garante que:
-- **Usuário**: www (UID 1000, GID 1000)
-- **Diretórios**: 775 (rwxrwxr-x)
-- **Arquivos**: 664 (rw-rw-r--)
-- **Diretórios críticos com escrita**:
-  - `storage/*`
-  - `bootstrap/cache`
-
-## 🌐 Compatibilidade
-
-| OS      | Status | Notas                          |
-|---------|--------|--------------------------------|
-| Linux   | ✅     | Testado                        |
-| macOS   | ✅     | Volumes funcionam nativamente  |
-| Windows | ✅     | Via Docker Desktop WSL2        |
-
-## 📌 Portas Expostas
-
-- **80**: Nginx (Laravel)
-- **443**: Nginx SSL
-- **3306**: MySQL
-- **5173**: Vite HMR
+**Instrução para o candidato**: "Identifique e corrija ao menos 4 bugs críticos e refatore a consulta de listagem para otimizar o banco de dados."
 
 ---
 
-**Próximos Passos**: Execute `just rebuild && just fix-permissions && just migrate`
+## Setup do Ambiente Docker
+
+Este projeto utiliza Docker com uma arquitetura completa para desenvolvimento Laravel.
+
+### Arquitetura
+
+A stack é composta por 4 serviços conectados via **network bridge**:
+
+- **app** (PHP 8.3-FPM): Executa a aplicação Laravel
+- **webserver** (Nginx): Servidor web para servir a aplicação
+- **db** (MySQL 8.0): Banco de dados
+- **node** (Node 20): Compila assets com Vite (HMR habilitado)
+
+### Pré-requisitos
+
+- Docker e Docker Compose instalados
+- Just (task runner) - Opcional, mas recomendado
+- **Windows**: Git Bash instalado e adicionado ao PATH (obrigatório para uso do `just`)
+  ```bash
+  # Ubuntu/Debian
+  curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+
+  # macOS
+  brew install just
+  ```
+
+### Primeira Execução
+
+1. **Subir os containers**:
+   ```bash
+   just up
+   # ou
+   docker-compose up -d
+   ```
+
+2. **Instalar Laravel** (primeira vez):
+   ```bash
+   just install
+   ```
+
+   Este comando irá:
+   - Criar um novo projeto Laravel em `/src`
+   - Configurar o `.env` para usar o banco Docker
+   - Gerar a application key
+   - Executar as migrations
+   - Instalar dependências npm
+
+3. **Acessar a aplicação**:
+   - Frontend: http://localhost:8081
+   - Vite Dev Server: http://localhost:5173
+   - MySQL: localhost:3306 (user: laravel, password: secret)
+
+### Comandos Úteis
+
+#### Docker Management
+```bash
+just up          # Inicia containers
+just down        # Para containers
+just restart     # Reinicia containers
+just ps          # Status dos containers
+just logs        # Ver logs (all services)
+just logs app    # Ver logs de serviço específico
+just rebuild     # Rebuild completo dos containers
+```
+
+#### Laravel
+```bash
+just artisan migrate              # Rodar migrations
+just artisan make:model Post      # Criar model
+just composer require package     # Instalar pacote PHP
+just test                         # Rodar testes
+```
+
+#### Database
+```bash
+just migrate     # Executar migrations
+just fresh       # Fresh migration com seed
+just rollback    # Rollback última migration
+just seed        # Executar seeders
+just mysql       # Acessar MySQL CLI
+```
+
+#### Frontend (Vite)
+```bash
+just npm install          # Instalar dependências
+just npm run build        # Build de produção
+# O Vite dev já roda automaticamente com HMR
+```
+
+#### Shell Access
+```bash
+just shell app      # Acessar shell do container PHP
+just shell node     # Acessar shell do container Node
+just bash           # Bash no container app
+```
+
+#### Manutenção
+```bash
+just clear       # Limpar caches do Laravel
+just optimize    # Otimizar para produção
+just clean       # Limpar tudo (containers + volumes + deps)
+just reset       # Reset completo (clean + rebuild)
+```
+
+### Estrutura de Diretórios
+
+```
+.
+├── docker/
+│   ├── nginx/
+│   │   ├── Dockerfile
+│   │   └── default.conf
+│   ├── php/
+│   │   ├── Dockerfile
+│   │   └── php.ini
+│   ├── mysql/
+│   │   └── init/
+│   └── node/
+│       └── Dockerfile
+├── src/                    # Código Laravel (criado após just install)
+├── docker-compose.yml      # Orquestração dos serviços
+├── justfile               # Comandos facilitadores
+└── Readme.md
+```
+
+### Configuração do Vite
+
+O Vite está configurado para funcionar com Hot Module Replacement (HMR). Para usar no Laravel:
+
+1. No seu `vite.config.js`, adicione:
+   ```javascript
+   export default defineConfig({
+       server: {
+           host: '0.0.0.0',
+           port: 5173,
+           hmr: {
+               host: 'localhost'
+           }
+       }
+   });
+   ```
+
+2. No `.env`:
+   ```
+   VITE_DEV_SERVER_HOST=0.0.0.0
+   VITE_DEV_SERVER_PORT=5173
+   ```
+
+### Troubleshooting
+
+**Containers não sobem:**
+```bash
+just logs        # Ver logs de erro
+docker-compose ps  # Verificar status
+```
+
+**Erro de permissão no Laravel:**
+```bash
+just shell app
+chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+```
+
+**MySQL não conecta:**
+- Aguarde o healthcheck completar (~30s após `just up`)
+- Verifique: `docker-compose logs db`
+
+**Vite não atualiza:**
+```bash
+just logs node   # Ver logs do Vite
+just npm install # Reinstalar dependências
+```
+
+### Próximos Passos
+
+Após o setup, você pode começar a trabalhar no desafio:
+
+1. Explore o código Laravel em `/src`
+2. Identifique os bugs listados na Parte 1
+3. Corrija os problemas encontrados
+4. Execute os testes: `just test`
+
+---
+
+### Tecnologias
+
+- PHP 8.3
+- Laravel 11.x
+- MySQL 8.0
+- Node 20
+- Vite
+- Nginx
+- Docker & Docker Compose

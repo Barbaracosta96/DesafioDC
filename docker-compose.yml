@@ -10,6 +10,9 @@ services:
     volumes:
       - ./src:/var/www
       - ./docker/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
+      - ./docker/php/entrypoint.sh:/usr/local/bin/entrypoint.sh
+      - ./tests:/var/www/tests
     networks:
       - laravel-network
     depends_on:
@@ -23,7 +26,7 @@ services:
     container_name: laravel-webserver
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "8081:80"
       - "443:443"
     volumes:
       - ./src:/var/www
@@ -51,7 +54,7 @@ services:
     networks:
       - laravel-network
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -proot --silent || exit 1"]
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -proot --silent || exit 1" ]
       interval: 15s
       timeout: 10s
       retries: 20
@@ -74,6 +77,7 @@ services:
     environment:
       - VITE_HOST=0.0.0.0
       - VITE_PORT=5173
+    command: [ "sh", "-c", "if [ -f package.json ]; then if [ ! -d node_modules ]; then npm install; fi; npm run dev -- --host; else echo 'Waiting for package.json...'; tail -f /dev/null; fi" ]
     depends_on:
       - app
     stdin_open: true

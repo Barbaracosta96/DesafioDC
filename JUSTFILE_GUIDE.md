@@ -157,6 +157,10 @@ just dev
 ### Windows
 
 #### PowerShell
+> [!IMPORTANT]
+> Para usar o `just` no PowerShell, você deve ter o **Git Bash** instalado e adicionado ao seu PATH (`C:\Program Files\Git\bin`).
+> Caso contrário, use o terminal **Git Bash**.
+
 ```powershell
 # Primeiro uso
 just up
