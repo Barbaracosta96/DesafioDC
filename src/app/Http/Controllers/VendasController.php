@@ -10,6 +10,7 @@ use App\Models\Venda;
 use App\Services\VendaService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -71,9 +72,11 @@ class VendasController extends Controller
 
     public function store(StoreVendaRequest $request): RedirectResponse
     {
-        abort_unless(auth()->user()->can('criar-vendas'), 403);
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        abort_unless($user->can('criar-vendas'), 403);
 
-        $this->vendaService->criar($request->validated(), auth()->id());
+        $this->vendaService->criar($request->validated(), (int) Auth::id());
 
         return redirect()->route('vendas.index')->with('sucesso', 'Venda registrada com sucesso!');
     }
@@ -127,12 +130,14 @@ class VendasController extends Controller
 
     public function update(UpdateVendaRequest $request, Venda $venda): RedirectResponse
     {
-        abort_unless(auth()->user()->can('editar-vendas'), 403);
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        abort_unless($user->can('editar-vendas'), 403);
 
         $dados = $request->validated();
 
         if ($dados['status'] !== $venda->status) {
-            $this->vendaService->atualizarStatus($venda, $dados['status'], auth()->id());
+            $this->vendaService->atualizarStatus($venda, $dados['status'], (int) Auth::id());
         }
 
         $venda->update(['observacoes' => $dados['observacoes'] ?? $venda->observacoes]);
@@ -142,10 +147,12 @@ class VendasController extends Controller
 
     public function destroy(Venda $venda): RedirectResponse
     {
-        abort_unless(auth()->user()->can('excluir-vendas'), 403);
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        abort_unless($user->can('excluir-vendas'), 403);
 
-        $this->vendaService->atualizarStatus($venda, 'cancelado', auth()->id());
-        $venda->forceDelete();
+        $this->vendaService->atualizarStatus($venda, 'cancelado', (int) Auth::id());
+        $venda->delete();
 
         return redirect()->route('vendas.index')->with('sucesso', 'Venda cancelada com sucesso!');
     }
