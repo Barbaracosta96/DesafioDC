@@ -19,9 +19,13 @@ if [ ! -f "/var/www/.env" ]; then
 fi
 
 # Auto-setup: Dependencies
-if [ ! -d "/var/www/vendor" ]; then
+if [ ! -f "/var/www/vendor/autoload.php" ]; then
     echo "Installing dependencies..."
-    composer install --no-progress --no-interaction
+    if [ -f "/var/www/composer.lock" ]; then
+        composer install --no-progress --no-interaction
+    else
+        composer update --no-progress --no-interaction
+    fi
 fi
 
 # Auto-setup: App Key
@@ -32,7 +36,7 @@ fi
 
 # Auto-setup: Migrations (Wait for DB)
 echo "Running migrations..."
-php artisan migrate --force
+php artisan migrate --force || echo "Warning: migrate had errors; check DB state"
 
 # Reset permissions just in case
 if [ "$FIX_PERMISSIONS" = "true" ] || [ ! -d "/var/www/storage" ]; then

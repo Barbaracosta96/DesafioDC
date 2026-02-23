@@ -1,4 +1,4 @@
-FROM php:8.3-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 # Install system dependencies
 RUN apk add --no-cache \
@@ -31,6 +31,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Copy custom PHP configuration
 COPY php.ini /usr/local/etc/php/conf.d/custom.ini
+
+# PHP-FPM pool config otimizado (workers dinamicos, slowlog, etc.)
+COPY www.conf /usr/local/etc/php-fpm.d/www.conf
 
 # Copy entrypoint and permission fix scripts
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh

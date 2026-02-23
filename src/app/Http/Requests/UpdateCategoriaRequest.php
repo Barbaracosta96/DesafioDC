@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class UpdateCategoriaRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    public function rules(): array
+    {
+        $categoriaId = $this->route('categoria')?->id;
+
+        return [
+            'nome'      => ['required', 'string', 'max:255', "unique:categorias,nome,{$categoriaId}"],
+            'descricao' => ['nullable', 'string', 'max:500'],
+            'ativo'     => ['boolean'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'nome.required' => 'O nome da categoria é obrigatório.',
+            'nome.unique'   => 'Esta categoria já existe.',
+        ];
+    }
+}
