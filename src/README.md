@@ -1,6 +1,8 @@
-﻿# DesafioDC — Sistema de Gestao Comercial
+﻿# CINDEC/MG — Sistema de Gestão Operacional em Defesa Civil
 
-Sistema web para gestao de vendas, estoque, clientes e categorias, desenvolvido com **Laravel 11**, **Vue 3**, **Inertia.js** e **Tailwind CSS v4**, rodando em ambiente **Docker**.
+Plataforma SaaS de gestão operacional do **Centro de Inteligência em Defesa Civil de Minas Gerais**, desenvolvida com **Laravel 11**, **Vue 3**, **Inertia.js** e **Tailwind CSS v4**, rodando em ambiente **Docker**.
+
+O sistema gerencia ativos tecnológicos, ordens de fornecimento, entidades parceiras e operações da Defesa Civil mineira.
 
 ---
 
@@ -163,11 +165,11 @@ just npm run dev
 
 Apos executar `just fresh` (migrations + seed):
 
-| Perfil        | E-mail                | Senha      |
-|---------------|-----------------------|------------|
-| Administrador | admin@base.com        | `password` |
-| Editor        | editor@base.com       | `password` |
-| Usuario       | usuario@base.com      | `password` |
+| Perfil        | E-mail                          | Senha      |
+|---------------|---------------------------------|------------|
+| Administrador | admin@cindec.mg.gov.br          | `password` |
+| Editor        | editor@cindec.mg.gov.br         | `password` |
+| Operador      | operador@cindec.mg.gov.br       | `password` |
 
 ### Permissoes por perfil
 
@@ -240,33 +242,33 @@ just artisan test --filter ClienteTest
 ## Modulos
 
 ### Dashboard
-- KPIs: vendas do dia, receita, clientes totais, estoque abaixo do minimo
-- Graficos: Visitor Insights, Total Revenue, Customer Satisfaction, Meta vs Realidade
-- Tabelas: Ultimos pedidos, Top Produtos
+- KPIs: operações do dia, valores operacionais, total de entidades, ativos abaixo do mínimo operacional
+- Gráficos: Volume Operacional, Valores Totais, Desempenho Operacional, Volume vs Eficiência
+- Tabelas: Ordens Recentes, Ativos em Destaque
 
-### Estoque (Produtos)
-- CRUD de produtos com SKU, precos, unidade e estoque minimo
-- Historico completo de movimentacoes (entrada, saida, ajuste, estorno)
-- Alertas de estoque abaixo do minimo
+### Ativos Tecnológicos (Estoque)
+- CRUD de equipamentos e ativos com código de patrimônio/SKU, custo de aquisição, valor de referência, unidade e quantidade mínima operacional
+- Histórico completo de movimentações (entrada, saída, ajuste, estorno)
+- Alertas de inventário abaixo do mínimo operacional
 
-### Vendas
-- Registro de vendas com multiplos itens
-- Decremento automatico de estoque ao criar
-- Estorno automatico ao cancelar
+### Ordens de Fornecimento (Vendas)
+- Registro de ordens com múltiplos ativos
+- Decremento automático de inventário ao criar
+- Estorno automático ao cancelar
 - Status: `pendente`, `processando`, `concluido`, `cancelado`
-- Formas de pagamento: dinheiro, cartao credito/debito, pix, boleto, outros
+- Formas de pagamento: transferência, empenho, contrato, outros
 
-### Clientes
-- Cadastro de pessoa fisica e juridica
-- Campos de endereco completo
-- Historico de compras por cliente
+### Entidades (Clientes)
+- Cadastro de órgãos públicos, municípios, coordenadorias e parceiros institucionais
+- Campos de endereço completo
+- Histórico de ordens por entidade
 
 ### Categorias
-- Gerenciamento de categorias de produtos
-- Protegido contra exclusao de categorias com produtos vinculados
+- Gerenciamento de categorias de ativos tecnológicos
+- Protegido contra exclusão de categorias com ativos vinculados
 
-### Usuarios *(somente admin)*
-- CRUD de usuarios com atribuicao de roles
+### Usuários *(somente admin)*
+- CRUD de operadores com atribuição de roles institucionais
 - Roles: `admin`, `editor`, `usuario`
 
 ---

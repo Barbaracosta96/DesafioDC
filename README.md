@@ -1,6 +1,8 @@
-# Base SaaS — Plataforma de Gestão Comercial
+# CINDEC/MG — Sistema de Gestão Operacional em Defesa Civil
 
-Aplicação SaaS de gestão comercial desenvolvida como desafio técnico, construída com **PHP 8.4 + Laravel 12**, **Vue.js 3 + Inertia.js** e **Tailwind CSS v4**, seguindo as melhores práticas do mercado: Clean Code, SOLID, Service Layer e testes automatizados.
+Plataforma SaaS de gestão operacional desenvolvida para o **Centro de Inteligência em Defesa Civil de Minas Gerais (CINDEC/MG)**, construída com **PHP 8.4 + Laravel 12**, **Vue.js 3 + Inertia.js** e **Tailwind CSS v4**, seguindo as melhores práticas do mercado: Clean Code, SOLID, Service Layer e testes automatizados.
+
+O sistema centraliza o controle de **ativos tecnológicos**, **ordens de fornecimento**, **entidades parceiras** e operações de campo da Defesa Civil mineira.
 
 ---
 
@@ -29,17 +31,17 @@ Aplicação SaaS de gestão comercial desenvolvida como desafio técnico, constr
 - Bloqueio de login para contas desativadas
 
 ### Módulos da Aplicação
-- **Estoque**: CRUD completo de produtos com movimentações de entrada/saída/ajuste/estorno
-- **Vendas**: Registro de pedidos com múltiplos itens, integridade de estoque via transação atômica
-- **Clientes**: Cadastro de pessoas físicas e jurídicas
-- **Categorias**: Organização de produtos
-- **Usuários** (admin): Gestão de usuários e atribuição de papéis
+- **Ativos Tecnológicos (Estoque)**: CRUD completo de equipamentos e ativos com movimentações de entrada/saída/ajuste/estorno
+- **Ordens de Fornecimento (Vendas)**: Registro de ordens com múltiplos itens, integridade de inventário via transação atômica
+- **Entidades (Clientes)**: Cadastro de órgãos públicos, parceiros e entidades de defesa civil
+- **Categorias**: Organização e classificação de ativos tecnológicos
+- **Usuários** (admin): Gestão de operadores do sistema e atribuição de papéis
 
 ### Painel Administrativo
-- Indicadores em tempo real: receita mensal, total de pedidos, produtos, clientes
-- Pedidos recentes
-- Top produtos por volume de vendas
-- Gráficos de receita semanal e análise de vendas
+- Indicadores em tempo real: valores operacionais, total de ordens, ativos em inventário, total de entidades
+- Ordens recentes de fornecimento
+- Ativos em destaque por volume operacional
+- Gráficos de volume operacional semanal e eficiência de fornecimento
 
 ### Gestão de Acesso (ACL)
 | Papel | Acesso |
@@ -309,9 +311,9 @@ npm install && npm run build
 
 | E-mail | Senha | Papel |
 |---|---|---|
-| admin@base.com | password | admin |
-| editor@base.com | password | editor |
-| usuario@base.com | password | usuario |
+| admin@cindec.mg.gov.br | password | admin |
+| editor@cindec.mg.gov.br | password | editor |
+| operador@cindec.mg.gov.br | password | usuario |
 
 ---
 
@@ -387,15 +389,15 @@ php artisan test --filter=VendaServiceTest
 
 ## Modelo de Negócio
 
-O sistema representa uma plataforma SaaS de gestão de vendas para pequenas e médias empresas, com os seguintes fluxos principais:
+O CINDEC/MG é uma plataforma SaaS de gestão operacional para o Centro de Inteligência em Defesa Civil de Minas Gerais, com os seguintes fluxos principais:
 
-1. **Cadastro e Login** → Usuário acessa a plataforma com seu papel definido
-2. **Gestão de Estoque** → Admin/Editor cadastra produtos com preço, categoria e quantidade mínima
-3. **Registro de Venda** → Operador seleciona cliente + produtos → sistema decrementa estoque automaticamente
-4. **Acompanhamento** → Dashboard mostra métricas em tempo real
-5. **Cancelamento** → Ao cancelar venda, estoque é devolvido via movimentação de estorno
-6. **ACL** → Admin controla usuários do sistema e seus níveis de acesso
+1. **Acesso Seguro** → Operador acessa o Portal Operacional com credenciais institucionais e papel definido
+2. **Gestão de Ativos** → Admin/Editor cadastra equipamentos e ativos tecnológicos com custo de aquisição, valor de referência, categoria e quantidade mínima operacional
+3. **Ordem de Fornecimento** → Responsável vincula entidade + ativos → sistema decrementa inventário automaticamente
+4. **Monitoramento** → Dashboard exibe métricas operacionais em tempo real (24/7)
+5. **Cancelamento de Ordem** → Ao cancelar, inventário é devolvido via movimentação de estorno
+6. **ACL** → Admin controla operadores do sistema e seus níveis de acesso institucional
 
 ---
 
-Desenvolvido por **Barbara Costa**
+Desenvolvido por **Barbara Costa** · CINDEC/MG — Centro de Inteligência em Defesa Civil de Minas Gerais
