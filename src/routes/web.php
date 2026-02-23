@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 | Rotas Públicas (Autenticação)
 |--------------------------------------------------------------------------
 */
+
 Route::middleware('guest')->group(function () {
     Route::get('/entrar', [LoginController::class, 'create'])->name('login');
     Route::post('/entrar', [LoginController::class, 'store'])->name('login.store');
@@ -47,6 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('estoque', EstoqueController::class)->parameters(['estoque' => 'produto']);
 
     // Módulo Vendas
+    Route::get('/vendas/exportar', [VendasController::class, 'exportar'])->name('vendas.exportar');
     Route::resource('vendas', VendasController::class);
 
     // Módulo Clientes

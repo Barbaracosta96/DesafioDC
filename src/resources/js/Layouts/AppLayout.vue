@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-screen overflow-hidden" style="background: linear-gradient(135deg, #f0fdf4 0%, #f8fafc 50%, #eff6ff 100%)">
+  <div class="flex h-screen overflow-hidden" style="background: linear-gradient(135deg, #e8f8f0 0%, #f8fafc 40%, #ede9fe 100%)">
     <!-- Sidebar -->
     <aside
       :class="[sidebarAberta ? 'translate-x-0' : '-translate-x-full', 'fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-0 flex flex-col']"
@@ -99,36 +99,134 @@
         </div>
 
         <!-- Search bar -->
-        <div class="flex-1 max-w-sm hidden md:block">
+        <div class="flex-1 max-w-md hidden md:block">
           <div class="relative">
-            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0" />
             </svg>
             <input
               type="text"
-              placeholder="Pesquisar aqui..."
-              class="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition-all"
+              placeholder="Search here..."
+              class="w-full pl-11 pr-5 py-2.5 bg-gray-50 border border-gray-200 rounded-full text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition-all shadow-sm"
             />
           </div>
         </div>
 
         <div class="flex items-center gap-2 ml-auto">
           <!-- Idioma -->
-          <button class="hidden sm:flex items-center gap-1.5 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg px-2.5 py-1.5 hover:bg-gray-50">
-            <span class="text-base leading-none">🇧🇷</span>
-            <span>PT (BR)</span>
-            <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
+          <div class="relative hidden sm:block" ref="langRef">
+            <button
+              class="flex items-center gap-1.5 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg px-2.5 py-1.5 hover:bg-gray-50 transition-colors"
+              @click="langMenuOpen = !langMenuOpen"
+            >
+              <span class="text-base leading-none">{{ selectedLang === 'en' ? '🇺🇸' : '🇧🇷' }}</span>
+              <span>{{ selectedLang === 'en' ? 'Eng (US)' : 'PT (BR)' }}</span>
+              <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div
+              v-if="langMenuOpen"
+              class="absolute right-0 mt-2 w-36 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50"
+            >
+              <button
+                @click="selectedLang = 'en'; langMenuOpen = false"
+                class="flex items-center gap-2 w-full px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 transition-colors"
+                :class="selectedLang === 'en' ? 'font-semibold text-indigo-600' : ''"
+              >
+                <span class="text-base">🇺🇸</span> Eng (US)
+              </button>
+              <button
+                @click="selectedLang = 'pt'; langMenuOpen = false"
+                class="flex items-center gap-2 w-full px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 transition-colors"
+                :class="selectedLang === 'pt' ? 'font-semibold text-indigo-600' : ''"
+              >
+                <span class="text-base">🇧🇷</span> PT (BR)
+              </button>
+            </div>
+          </div>
 
           <!-- Notificações -->
-          <button class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-            </svg>
-            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
-          </button>
+          <div class="relative" ref="notifRef">
+            <button
+              class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
+              @click="notifOpen = !notifOpen"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
+            </button>
+
+            <!-- Dropdown de Notificações -->
+            <div
+              v-if="notifOpen"
+              class="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 overflow-hidden"
+            >
+              <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+                <h4 class="text-sm font-bold text-gray-900">Notificações</h4>
+                <span class="text-xs bg-rose-500 text-white rounded-full px-2 py-0.5 font-semibold">3 novas</span>
+              </div>
+              <div class="divide-y divide-gray-50 max-h-72 overflow-y-auto">
+                <div class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer">
+                  <div class="w-9 h-9 rounded-xl bg-rose-100 flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-xs font-semibold text-gray-900">Nova venda registrada</p>
+                    <p class="text-xs text-gray-500 mt-0.5">Pedido #VD-001 foi criado com sucesso</p>
+                    <p class="text-xs text-gray-400 mt-1">há 5 minutos</p>
+                  </div>
+                  <span class="w-2 h-2 bg-rose-500 rounded-full mt-1 shrink-0"></span>
+                </div>
+                <div class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer">
+                  <div class="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-xs font-semibold text-gray-900">Estoque baixo detectado</p>
+                    <p class="text-xs text-gray-500 mt-0.5">3 produtos estão com estoque crítico</p>
+                    <p class="text-xs text-gray-400 mt-1">há 20 minutos</p>
+                  </div>
+                  <span class="w-2 h-2 bg-amber-500 rounded-full mt-1 shrink-0"></span>
+                </div>
+                <div class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer">
+                  <div class="w-9 h-9 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-xs font-semibold text-gray-900">Novo cliente cadastrado</p>
+                    <p class="text-xs text-gray-500 mt-0.5">Um novo cliente foi adicionado ao sistema</p>
+                    <p class="text-xs text-gray-400 mt-1">há 1 hora</p>
+                  </div>
+                  <span class="w-2 h-2 bg-emerald-500 rounded-full mt-1 shrink-0"></span>
+                </div>
+                <div class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer opacity-60">
+                  <div class="w-9 h-9 rounded-xl bg-indigo-100 flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-xs font-semibold text-gray-900">Venda concluída</p>
+                    <p class="text-xs text-gray-500 mt-0.5">Pedido #VD-995 foi finalizado</p>
+                    <p class="text-xs text-gray-400 mt-1">há 3 horas</p>
+                  </div>
+                </div>
+              </div>
+              <div class="px-4 py-2.5 border-t border-gray-100 text-center">
+                <button class="text-xs text-indigo-600 font-semibold hover:text-indigo-800 transition-colors" @click="notifOpen = false">
+                  Ver todas as notificações
+                </button>
+              </div>
+            </div>
+          </div>
 
           <!-- Usuário -->
           <div class="relative" ref="menuRef">
@@ -136,8 +234,14 @@
               class="flex items-center gap-2.5 px-2 py-1.5 rounded-xl hover:bg-gray-100 transition-colors"
               @click="menuUsuario = !menuUsuario"
             >
-              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold shadow-sm">
-                {{ iniciais }}
+              <div class="w-9 h-9 rounded-full overflow-hidden ring-2 ring-indigo-100 shadow-sm shrink-0 bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                <img
+                  :src="avatarUrl"
+                  :alt="$page.props.auth.user?.name"
+                  class="w-full h-full object-cover"
+                  @error="(e) => { e.target.style.display='none'; e.target.nextElementSibling.style.display='flex'; }"
+                />
+                <span class="text-white text-sm font-bold hidden w-full h-full items-center justify-center">{{ iniciais }}</span>
               </div>
               <div class="hidden sm:block text-left">
                 <p class="text-sm font-semibold text-gray-800 leading-tight">{{ $page.props.auth.user?.name }}</p>
@@ -212,10 +316,20 @@ const page = usePage();
 const sidebarAberta = ref(false);
 const menuUsuario = ref(false);
 const menuRef = ref(null);
+const langMenuOpen = ref(false);
+const langRef = ref(null);
+const selectedLang = ref('en');
+const notifOpen = ref(false);
+const notifRef = ref(null);
 
 const iniciais = computed(() => {
   const nome = page.props.auth?.user?.name ?? '';
   return nome.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase();
+});
+
+const avatarUrl = computed(() => {
+  const id = ((page.props.auth?.user?.id ?? 1) % 70) + 1;
+  return `https://i.pravatar.cc/80?img=${id}`;
 });
 
 const isAtivo = (rota) => {
@@ -226,6 +340,12 @@ const isAtivo = (rota) => {
 const fecharMenu = (e) => {
   if (menuRef.value && !menuRef.value.contains(e.target)) {
     menuUsuario.value = false;
+  }
+  if (langRef.value && !langRef.value.contains(e.target)) {
+    langMenuOpen.value = false;
+  }
+  if (notifRef.value && !notifRef.value.contains(e.target)) {
+    notifOpen.value = false;
   }
 };
 

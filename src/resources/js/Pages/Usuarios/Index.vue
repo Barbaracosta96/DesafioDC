@@ -16,10 +16,16 @@
     </div>
 
     <!-- Filtros -->
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 mb-6">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 mb-6">
+      <p class="text-sm font-semibold text-gray-700 mb-3">Filtrar usuários</p>
       <form @submit.prevent="filtrar" class="flex flex-wrap gap-3">
-        <input v-model="filtroForm.busca" type="search" placeholder="Buscar por nome ou e-mail..." class="flex-1 min-w-48 px-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-        <select v-model="filtroForm.role" class="px-3 py-2.5 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <div class="relative flex-1 min-w-48">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0" />
+          </svg>
+          <input v-model="filtroForm.busca" type="search" placeholder="Buscar por nome ou e-mail..." class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-gray-50" />
+        </div>
+        <select v-model="filtroForm.role" class="px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-gray-50">
           <option value="">Todos perfis</option>
           <option v-for="r in roles" :key="r.id" :value="r.name">{{ r.name }}</option>
         </select>
@@ -29,24 +35,34 @@
 
     <!-- Tabela -->
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <div>
+          <h3 class="font-bold text-gray-900">Lista de Usuários</h3>
+          <p class="text-xs text-gray-400 mt-0.5">{{ usuarios.total ?? 0 }} registros encontrados</p>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
       <table class="w-full">
         <thead>
-          <tr class="bg-gray-50 border-b border-gray-100">
-            <th class="text-left text-xs font-medium text-gray-500 px-6 py-3 uppercase">Usuário</th>
-            <th class="text-left text-xs font-medium text-gray-500 px-4 py-3 uppercase">E-mail</th>
-            <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 uppercase">Perfis</th>
-            <th class="text-left text-xs font-medium text-gray-500 px-4 py-3 uppercase">Cadastrado em</th>
-            <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 uppercase">Ações</th>
+          <tr class="bg-gray-50">
+            <th class="text-left text-xs font-semibold text-gray-500 px-6 py-3.5 uppercase tracking-wide">Usuário</th>
+            <th class="text-left text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide">E-mail</th>
+            <th class="text-center text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide">Perfis</th>
+            <th class="text-left text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide">Cadastrado em</th>
+            <th class="text-center text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide">Ações</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-50">
-          <tr v-for="usuario in usuarios.data" :key="usuario.id" class="hover:bg-gray-50 transition-colors">
+          <tr v-for="usuario in usuarios.data" :key="usuario.id" class="hover:bg-indigo-50/30 transition-colors">
             <td class="px-6 py-4">
               <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 text-sm font-semibold">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0 shadow-sm" :style="{ background: 'linear-gradient(135deg, ' + userColor(usuario.name) + ')' }">
                   {{ iniciais(usuario.name) }}
                 </div>
-                <p class="text-sm font-medium text-gray-900">{{ usuario.name }}</p>
+                <div>
+                  <p class="text-sm font-semibold text-gray-900">{{ usuario.name }}</p>
+                  <p class="text-xs text-gray-400">{{ usuario.email }}</p>
+                </div>
               </div>
             </td>
             <td class="px-4 py-4 text-sm text-gray-600">{{ usuario.email }}</td>
@@ -72,10 +88,20 @@
             </td>
           </tr>
           <tr v-if="!usuarios.data.length">
-            <td colspan="5" class="px-6 py-12 text-center text-sm text-gray-400">Nenhum usuário encontrado.</td>
+            <td colspan="5" class="px-6 py-16 text-center">
+              <div class="flex flex-col items-center gap-3">
+                <div class="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center">
+                  <svg class="w-7 h-7 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <p class="text-sm font-medium text-gray-400">Nenhum usuário encontrado</p>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
+      </div>
       <Paginacao :links="usuarios.links" :de="usuarios.from" :ate="usuarios.to" :total="usuarios.total" class="px-6 py-4 border-t border-gray-100" />
     </div>
 
@@ -121,4 +147,12 @@ const excluir = () => {
 
 const iniciais   = (nome) => nome.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase();
 const badgeRole  = (r) => ({ admin: 'roxo', editor: 'azul', usuario: 'cinza' }[r] ?? 'cinza');
+const userColor  = (nome) => {
+  const cores = [
+    '#6366f1, #8b5cf6', '#ec4899, #f43f5e', '#10b981, #059669',
+    '#f59e0b, #d97706', '#3b82f6, #2563eb', '#8b5cf6, #6d28d9',
+  ];
+  const idx = (nome?.charCodeAt(0) ?? 0) % cores.length;
+  return cores[idx];
+};
 </script>

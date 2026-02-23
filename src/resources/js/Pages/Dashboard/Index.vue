@@ -12,18 +12,18 @@
             <h3 class="font-bold text-gray-900 text-base">Vendas de Hoje</h3>
             <p class="text-xs text-gray-400">Resumo de Vendas</p>
           </div>
-          <button class="flex items-center gap-1.5 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 transition-colors">
+          <a :href="route('vendas.exportar')" class="flex items-center gap-1.5 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 hover:border-indigo-300 hover:text-indigo-600 transition-colors">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
             </svg>
             Exportar
-          </button>
+          </a>
         </div>
 
         <!-- 4 mini-cards coloridos -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
           <CardVendaHoje
-            :valor="estatisticas.receita_mensal"
+            :valor="estatisticas.receita_mensal || 'R$ 0,00'"
             descricao="Total de Vendas"
             variacao="+8%"
             bg="bg-rose-100"
@@ -31,7 +31,7 @@
             icone="dinheiro"
           />
           <CardVendaHoje
-            :valor="estatisticas.vendas_mes"
+            :valor="estatisticas.vendas_mes ?? 0"
             descricao="Total de Pedidos"
             variacao="+5%"
             bg="bg-amber-50"
@@ -39,16 +39,16 @@
             icone="pedido"
           />
           <CardVendaHoje
-            :valor="estatisticas.total_produtos"
-            descricao="Produtos Vendidos"
+            :valor="estatisticas.total_produtos ?? 0"
+            descricao="Produtos em Estoque"
             variacao="+1,2%"
             bg="bg-emerald-50"
             icone-bg="bg-emerald-500"
             icone="produto"
           />
           <CardVendaHoje
-            :valor="estatisticas.total_clientes"
-            descricao="Novos Clientes"
+            :valor="estatisticas.total_clientes ?? 0"
+            descricao="Total de Clientes"
             variacao="+0,5%"
             bg="bg-purple-50"
             icone-bg="bg-purple-500"
@@ -199,7 +199,7 @@
               <tr v-for="venda in vendasRecentes" :key="venda.id" class="hover:bg-gray-50 transition-colors">
                 <td class="px-5 py-3 text-xs font-medium text-gray-700">{{ venda.numero_pedido }}</td>
                 <td class="px-3 py-3 text-xs text-gray-600 max-w-24 truncate">{{ venda.cliente }}</td>
-                <td class="px-3 py-3 text-xs text-gray-600 whitespace-nowrap">R$ {{ venda.total }}</td>
+                <td class="px-3 py-3 text-xs text-gray-600 whitespace-nowrap">{{ venda.total }}</td>
                 <td class="px-3 py-3">
                   <Badge :variant="badgeStatus(venda.status)">{{ venda.status_label }}</Badge>
                 </td>
@@ -238,7 +238,7 @@
                 </div>
               </div>
               <div class="col-span-3 text-right">
-                <span :class="['px-2 py-0.5 rounded-md text-xs font-semibold', badgesCorProduto[i % badgesCorProduto.length]]">{{ produto.vendas }}%</span>
+                <span :class="['px-2 py-0.5 rounded-md text-xs font-semibold', badgesCorProduto[i % badgesCorProduto.length]]">{{ produto.popularidade }}%</span>
               </div>
             </div>
             <div v-if="!topProdutos.length" class="py-6 text-center text-xs text-gray-400">Nenhum produto ainda.</div>

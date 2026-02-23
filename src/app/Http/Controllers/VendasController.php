@@ -145,6 +145,63 @@ class VendasController extends Controller
         return redirect()->route('vendas.show', $venda)->with('sucesso', 'Venda atualizada com sucesso!');
     }
 
+    public function exportar(Request $request)
+    {
+        $query = Venda::with(['cliente', 'vendedor'])
+            ->when($request->busca, fn($q) => $q->where('numero_pedido', 'like', "%{$request->busca}%")
+                ->orWhereHas('cliente', fn($c) => $c->where('nome', 'like', "%{$request->busca}%")))
+            ->when($request->status, fn($q) => $q->where('status', $request->status))
+            ->when($request->data_inicio, fn($q) => $q->whereDate('data_venda', '>=', $request->data_inicio))
+            ->when($request->data_fim, fn($q) => $q->whereDate('data_venda', '<=', $request->data_fim))
+            ->latest('data_venda')
+            ->get();
+
+        $nomeArquivo = 'vendas_' . now()->format('Ymd_His') . '.csv';
+
+        $headers = [
+            'Content-Type'        => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"$nomeArquivo\"",
+            'Pragma'              => 'no-cache',
+            'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires'             => '0',
+        ];
+
+        $callback = function () use ($query) {
+            $fp = fopen('php://output', 'w');
+            fprintf($fp, chr(0xEF) . chr(0xBB) . chr(0xBF)); // BOM UTF-8
+
+            fputcsv($fp, [
+                'Nº Pedido',
+                'Cliente',
+                'Vendedor',
+                'Forma Pagamento',
+                'Status',
+                'Subtotal (R$)',
+                'Desconto (R$)',
+                'Total (R$)',
+                'Data',
+            ], ';');
+
+            foreach ($query as $v) {
+                fputcsv($fp, [
+                    $v->numero_pedido,
+                    $v->cliente?->nome ?? 'Cliente avulso',
+                    $v->vendedor?->name ?? 'N/A',
+                    $v->forma_pagamento_label,
+                    $v->status_label,
+                    number_format((float) $v->subtotal, 2, ',', '.'),
+                    number_format((float) $v->desconto, 2, ',', '.'),
+                    number_format((float) $v->total, 2, ',', '.'),
+                    $v->data_venda?->format('d/m/Y H:i') ?? $v->created_at->format('d/m/Y H:i'),
+                ], ';');
+            }
+
+            fclose($fp);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
     public function destroy(Venda $venda): RedirectResponse
     {
         /** @var \App\Models\User $user */
