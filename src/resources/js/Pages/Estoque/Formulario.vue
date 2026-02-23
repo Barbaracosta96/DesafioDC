@@ -1,18 +1,18 @@
 <template>
-  <AppLayout :titulo="produto ? 'Editar Produto' : 'Novo Produto'">
-    <Head :title="produto ? 'Editar Produto' : 'Novo Produto'" />
+  <AppLayout :titulo="produto ? 'Editar Ativo' : 'Novo Ativo'">
+    <Head :title="produto ? 'Editar Ativo' : 'Novo Ativo Tecnológico'" />
 
     <div class="max-w-3xl">
       <!-- Breadcrumb -->
       <div class="flex items-center gap-2 text-sm text-gray-500 mb-6">
-        <Link :href="route('estoque.index')" class="hover:text-indigo-600">Estoque</Link>
+        <Link :href="route('estoque.index')" class="hover:text-indigo-600">Ativos Tecnológicos</Link>
         <span>/</span>
-        <span class="text-gray-900 font-medium">{{ produto ? 'Editar' : 'Novo Produto' }}</span>
+        <span class="text-gray-900 font-medium">{{ produto ? 'Editar' : 'Novo Ativo' }}</span>
       </div>
 
       <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
         <h2 class="text-lg font-semibold text-gray-900 mb-6">
-          {{ produto ? 'Editar Produto' : 'Cadastrar Novo Produto' }}
+          {{ produto ? 'Editar Ativo Tecnológico' : 'Cadastrar Novo Ativo Tecnológico' }}
         </h2>
 
         <form @submit.prevent="enviar" class="space-y-5">
@@ -20,15 +20,15 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <InputField
               v-model="form.nome"
-              label="Nome do Produto"
-              placeholder="Ex: Câmera DSLR"
+              label="Nome do Equipamento / Ativo"
+              placeholder="Ex: Drone de Vigilância DJI M30"
               :erro="form.errors.nome"
               obrigatorio
             />
             <InputField
               v-model="form.codigo_sku"
-              label="Código SKU"
-              placeholder="Ex: CAM-001"
+              label="Código de Patrimônio / SKU"
+              placeholder="Ex: DC-TEC-001"
               :erro="form.errors.codigo_sku"
             />
           </div>
@@ -45,7 +45,7 @@
             <SelectField
               v-model="form.unidade"
               label="Unidade de Medida"
-              :opcoes="[{value:'un',label:'Unidade (un)'},{value:'kg',label:'Quilograma (kg)'},{value:'L',label:'Litro (L)'},{value:'m',label:'Metro (m)'},{value:'cx',label:'Caixa (cx)'}]"
+              :opcoes="[{value:'un',label:'Unidade (un)'},{value:'kit',label:'Kit (kit)'},{value:'cx',label:'Caixa (cx)'},{value:'par',label:'Par (par)'},{value:'lic',label:'Licença (lic)'},{value:'m',label:'Metro (m)'}]"
               :erro="form.errors.unidade"
               obrigatorio
             />
@@ -55,7 +55,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <InputField
               v-model="form.preco_custo"
-              label="Preço de Custo (R$)"
+              label="Custo de Aquisição (R$)"
               type="number"
               placeholder="0,00"
               :erro="form.errors.preco_custo"
@@ -63,7 +63,7 @@
             />
             <InputField
               v-model="form.preco_venda"
-              label="Preço de Venda (R$)"
+              label="Valor de Referência (R$)"
               type="number"
               placeholder="0,00"
               :erro="form.errors.preco_venda"
@@ -75,7 +75,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <InputField
               v-model="form.quantidade_estoque"
-              label="Quantidade em Estoque"
+              label="Quantidade em Inventário"
               type="number"
               placeholder="0"
               :erro="form.errors.quantidade_estoque"
@@ -83,7 +83,7 @@
             />
             <InputField
               v-model="form.estoque_minimo"
-              label="Estoque Mínimo (alerta)"
+              label="Quantidade Mínima Operacional"
               type="number"
               placeholder="5"
               :erro="form.errors.estoque_minimo"
@@ -97,7 +97,7 @@
             <textarea
               v-model="form.descricao"
               rows="3"
-              placeholder="Descrição detalhada do produto..."
+              placeholder="Descrição técnica do ativo, especificações e finalidade operacional..."
               class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
             />
           </div>
@@ -105,13 +105,13 @@
           <!-- Status -->
           <label class="flex items-center gap-3 cursor-pointer">
             <input type="checkbox" v-model="form.ativo" class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-            <span class="text-sm font-medium text-gray-700">Produto ativo</span>
+            <span class="text-sm font-medium text-gray-700">Ativo operacional</span>
           </label>
 
           <!-- Botões -->
           <div class="flex gap-3 pt-2">
             <Botao type="submit" :carregando="form.processing">
-              {{ produto ? 'Salvar Alterações' : 'Cadastrar Produto' }}
+              {{ produto ? 'Salvar Alterações' : 'Registrar Ativo' }}
             </Botao>
             <Botao variant="secundario" :href="route('estoque.index')">
               Cancelar

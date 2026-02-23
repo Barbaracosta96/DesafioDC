@@ -9,8 +9,8 @@
       <div class="xl:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
         <div class="flex items-center justify-between mb-4">
           <div>
-            <h3 class="font-bold text-gray-900 text-base">Vendas de Hoje</h3>
-            <p class="text-xs text-gray-400">Resumo de Vendas</p>
+            <h3 class="font-bold text-gray-900 text-base">Operações de Hoje</h3>
+            <p class="text-xs text-gray-400">Resumo Operacional</p>
           </div>
           <a :href="route('vendas.exportar')" class="flex items-center gap-1.5 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 hover:border-indigo-300 hover:text-indigo-600 transition-colors">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -31,7 +31,7 @@
             </div>
             <div>
               <p class="text-xl font-bold text-gray-900 leading-tight">{{ estatisticas.receita_mensal || 'R$ 1k' }}</p>
-              <p class="text-xs text-gray-500 mt-0.5">Total de Vendas</p>
+              <p class="text-xs text-gray-500 mt-0.5">Valor Total Operacional</p>
             </div>
             <p class="text-xs font-medium text-emerald-600">+8% <span class="text-gray-400 font-normal">em relacao a ontem</span></p>
           </div>
@@ -44,7 +44,7 @@
             </div>
             <div>
               <p class="text-xl font-bold text-gray-900 leading-tight">{{ estatisticas.vendas_mes ?? 0 }}</p>
-              <p class="text-xs text-gray-500 mt-0.5">Total de Pedidos</p>
+              <p class="text-xs text-gray-500 mt-0.5">Total de Ordens</p>
             </div>
             <p class="text-xs font-medium text-emerald-600">+5% <span class="text-gray-400 font-normal">em relacao a ontem</span></p>
           </div>
@@ -57,7 +57,7 @@
             </div>
             <div>
               <p class="text-xl font-bold text-gray-900 leading-tight">{{ estatisticas.total_produtos ?? 0 }}</p>
-              <p class="text-xs text-gray-500 mt-0.5">Produtos em Estoque</p>
+              <p class="text-xs text-gray-500 mt-0.5">Ativos em Inventário</p>
             </div>
             <p class="text-xs font-medium text-emerald-600">+1,2% <span class="text-gray-400 font-normal">em relacao a ontem</span></p>
           </div>
@@ -70,7 +70,7 @@
             </div>
             <div>
               <p class="text-xl font-bold text-gray-900 leading-tight">{{ estatisticas.total_clientes ?? 0 }}</p>
-              <p class="text-xs text-gray-500 mt-0.5">Total de Clientes</p>
+              <p class="text-xs text-gray-500 mt-0.5">Total de Entidades</p>
             </div>
             <p class="text-xs font-medium text-emerald-600">+0,5% <span class="text-gray-400 font-normal">em relacao a ontem</span></p>
           </div>
@@ -110,7 +110,7 @@
 
       <!-- Receita Total -->
       <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-        <h3 class="font-bold text-gray-900 text-base mb-4">Receita Total</h3>
+        <h3 class="font-bold text-gray-900 text-base mb-4">Valores Operacionais</h3>
         <div class="relative">
           <div class="flex">
             <div class="flex flex-col justify-between text-xs text-gray-400 mr-2 h-40">
@@ -128,14 +128,14 @@
           </div>
         </div>
         <div class="flex gap-4 mt-3 text-xs text-gray-500">
-          <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-indigo-600 inline-block"></span>Vendas Online</div>
-          <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span>Vendas Offline</div>
+          <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-indigo-600 inline-block"></span>Ordens Digitais</div>
+          <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span>Ordens Presenciais</div>
         </div>
       </div>
 
       <!-- Satisfacao do Cliente -->
       <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-        <h3 class="font-bold text-gray-900 text-base mb-1">Satisfacao do Cliente</h3>
+        <h3 class="font-bold text-gray-900 text-base mb-1">Desempenho Operacional</h3>
         <div class="relative h-36 mb-2">
           <svg viewBox="0 0 220 100" class="w-full h-full" preserveAspectRatio="none">
             <defs>
@@ -202,7 +202,7 @@
       <!-- Pedidos Recentes -->
       <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-          <h3 class="font-bold text-gray-900 text-base">Pedidos Recentes</h3>
+          <h3 class="font-bold text-gray-900 text-base">Ordens Recentes</h3>
           <Link :href="route('vendas.index')" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">Ver todos</Link>
         </div>
         <div class="overflow-x-auto max-h-72 overflow-y-auto">
@@ -210,7 +210,7 @@
             <thead>
               <tr class="bg-gray-50 border-b border-gray-100">
                 <th class="text-left text-xs font-semibold text-gray-500 px-5 py-3">N</th>
-                <th class="text-left text-xs font-semibold text-gray-500 px-3 py-3">Produto</th>
+                <th class="text-left text-xs font-semibold text-gray-500 px-3 py-3">Ativo</th>
                 <th class="text-left text-xs font-semibold text-gray-500 px-3 py-3">Preco</th>
                 <th class="text-left text-xs font-semibold text-gray-500 px-3 py-3">Status</th>
               </tr>
@@ -225,7 +225,7 @@
                 </td>
               </tr>
               <tr v-if="!vendasRecentes.length">
-                <td colspan="4" class="px-5 py-8 text-center text-xs text-gray-400">Nenhuma venda registrada ainda.</td>
+                <td colspan="4" class="px-5 py-8 text-center text-xs text-gray-400">Nenhuma ordem registrada ainda.</td>
               </tr>
             </tbody>
           </table>
@@ -235,7 +235,7 @@
       <!-- Top Produtos com barra de popularidade -->
       <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-          <h3 class="font-bold text-gray-900 text-base">Top Produtos</h3>
+          <h3 class="font-bold text-gray-900 text-base">Ativos em Destaque</h3>
           <Link :href="route('estoque.index')" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">Ver todos</Link>
         </div>
         <div class="px-5 py-3">
@@ -261,14 +261,14 @@
                 <span :class="['px-2 py-0.5 rounded-md text-xs font-semibold', badgesCorProduto[i % badgesCorProduto.length]]">{{ produto.popularidade }}%</span>
               </div>
             </div>
-            <div v-if="!topProdutos.length" class="py-6 text-center text-xs text-gray-400">Nenhum produto ainda.</div>
+            <div v-if="!topProdutos.length" class="py-6 text-center text-xs text-gray-400">Nenhum ativo registrado ainda.</div>
           </div>
         </div>
       </div>
 
       <!-- Volume vs Nivel de Servico -->
       <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-        <h3 class="font-bold text-gray-900 text-base mb-4">Volume vs Nivel de Servico</h3>
+        <h3 class="font-bold text-gray-900 text-base mb-4">Volume vs Eficiência Operacional</h3>
         <div class="relative mb-3" style="height:160px">
           <div class="flex items-end gap-2" style="height:100%">
             <div v-for="(item, i) in volumeServico" :key="i" class="flex-1 flex gap-0.5 items-end" style="height:100%">

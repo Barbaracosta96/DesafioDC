@@ -1,18 +1,18 @@
 <template>
-  <AppLayout titulo="Estoque">
-    <Head title="Estoque" />
+    <AppLayout titulo="Ativos Tecnológicos">
+    <Head title="Ativos Tecnológicos" />
 
     <!-- Cabeçalho -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
       <div>
-        <h2 class="text-2xl font-bold text-gray-900">Controle de Estoque</h2>
-        <p class="text-sm text-gray-500 mt-0.5">Gerencie seus produtos e inventário</p>
+        <h2 class="text-2xl font-bold text-gray-900">Gestão de Ativos Tecnológicos</h2>
+        <p class="text-sm text-gray-500 mt-0.5">Gerencie equipamentos e ativos operacionais da Defesa Civil</p>
       </div>
       <Botao :href="route('estoque.create')">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
-        Adicionar Produto
+        Adicionar Ativo
       </Botao>
     </div>
 
@@ -28,7 +28,7 @@
           <span class="text-xs font-semibold text-indigo-600 bg-indigo-100 rounded-full px-2 py-0.5">ativo</span>
         </div>
         <p class="text-2xl font-bold text-gray-900">{{ resumo.total }}</p>
-        <p class="text-xs text-gray-500 mt-1">Produtos Ativos</p>
+        <p class="text-xs text-gray-500 mt-1">Ativos Operacionais</p>
       </div>
       <div class="rounded-2xl p-5 shadow-sm" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)">
         <div class="flex items-center justify-between mb-3">
@@ -58,13 +58,13 @@
 
     <!-- Filtros -->
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 mb-6">
-      <p class="text-sm font-semibold text-gray-700 mb-3">Filtrar produtos</p>
+      <p class="text-sm font-semibold text-gray-700 mb-3">Filtrar ativos</p>
       <form @submit.prevent="filtrar" class="flex flex-col sm:flex-row gap-3">
         <div class="relative flex-1">
           <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0" />
           </svg>
-          <input v-model="filtroForm.busca" type="search" placeholder="Buscar por nome ou SKU..." class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-gray-50" />
+          <input v-model="filtroForm.busca" type="search" placeholder="Buscar por equipamento ou SKU..." class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-gray-50" />
         </div>
         <select v-model="filtroForm.categoria_id" class="px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-gray-50">
           <option value="">Todas categorias</option>
@@ -84,7 +84,7 @@
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
       <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
         <div>
-          <h3 class="font-bold text-gray-900">Lista de Produtos</h3>
+          <h3 class="font-bold text-gray-900">Inventário de Ativos</h3>
           <p class="text-xs text-gray-400 mt-0.5">{{ produtos.total ?? 0 }} registros encontrados</p>
         </div>
       </div>
@@ -92,7 +92,7 @@
       <table class="w-full">
         <thead>
           <tr class="bg-gray-50">
-            <th class="text-left text-xs font-semibold text-gray-500 px-6 py-3.5 uppercase tracking-wide">Produto</th>
+            <th class="text-left text-xs font-semibold text-gray-500 px-6 py-3.5 uppercase tracking-wide">Equipamento / Ativo</th>
             <th class="text-left text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide">SKU</th>
             <th class="text-left text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide">Categoria</th>
             <th class="text-right text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide">Preço</th>
@@ -162,7 +162,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                   </svg>
                 </div>
-                <p class="text-sm font-medium text-gray-400">Nenhum produto encontrado</p>
+                <p class="text-sm font-medium text-gray-400">Nenhum ativo encontrado</p>
               </div>
             </td>
           </tr>
@@ -173,9 +173,9 @@
     </div>
 
     <!-- Modal de confirmação de exclusão -->
-    <Modal :aberto="!!produtoExcluir" titulo="Excluir produto" @fechar="produtoExcluir = null">
+    <Modal :aberto="!!produtoExcluir" titulo="Remover ativo" @fechar="produtoExcluir = null">
       <p class="text-sm text-gray-600">
-        Tem certeza que deseja excluir o produto
+        Tem certeza que deseja remover o ativo
         <strong class="text-gray-900">{{ produtoExcluir?.nome }}</strong>?
         Esta ação não pode ser desfeita.
       </p>

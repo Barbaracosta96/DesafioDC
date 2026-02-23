@@ -1,12 +1,12 @@
 <template>
-  <AppLayout titulo="Vendas">
-    <Head title="Vendas" />
+    <AppLayout titulo="Ordens de Fornecimento">
+    <Head title="Ordens de Fornecimento" />
 
     <!-- Cabeçalho -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
       <div>
-        <h2 class="text-2xl font-bold text-gray-900">Acompanhamento de Vendas</h2>
-        <p class="text-sm text-gray-500 mt-0.5">Gerencie e acompanhe todos os pedidos</p>
+        <h2 class="text-2xl font-bold text-gray-900">Ordens de Fornecimento</h2>
+        <p class="text-sm text-gray-500 mt-0.5">Gerencie aquisições e ordens de tecnologia operacional</p>
       </div>
       <div class="flex items-center gap-2">
         <a
@@ -22,7 +22,7 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
-          Nova Venda
+          Nova Ordem
         </Botao>
       </div>
     </div>
@@ -39,7 +39,7 @@
           <span class="text-xs font-semibold text-pink-600 bg-pink-100 rounded-full px-2 py-0.5">hoje</span>
         </div>
         <p class="text-2xl font-bold text-gray-900">{{ resumo.total_hoje }}</p>
-        <p class="text-xs text-gray-500 mt-1">Vendas Hoje</p>
+        <p class="text-xs text-gray-500 mt-1">Ordens Hoje</p>
       </div>
 
       <div class="rounded-2xl p-5 shadow-sm" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)">
@@ -52,7 +52,7 @@
           <span class="text-xs font-semibold text-emerald-600 bg-emerald-100 rounded-full px-2 py-0.5">hoje</span>
         </div>
         <p class="text-xl font-bold text-gray-900">{{ resumo.receita_hoje }}</p>
-        <p class="text-xs text-gray-500 mt-1">Receita Hoje</p>
+        <p class="text-xs text-gray-500 mt-1">Valor Hoje</p>
       </div>
 
       <div class="rounded-2xl p-5 shadow-sm" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)">
@@ -84,13 +84,13 @@
 
     <!-- Filtros -->
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 mb-6">
-      <p class="text-sm font-semibold text-gray-700 mb-3">Filtrar vendas</p>
+      <p class="text-sm font-semibold text-gray-700 mb-3">Filtrar ordens</p>
       <form @submit.prevent="filtrar" class="flex flex-wrap gap-3">
         <div class="relative flex-1 min-w-48">
           <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0" />
           </svg>
-          <input v-model="filtroForm.busca" type="search" placeholder="Buscar por número ou cliente..." class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 bg-gray-50" />
+          <input v-model="filtroForm.busca" type="search" placeholder="Buscar por número ou entidade..." class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 bg-gray-50" />
         </div>
         <select v-model="filtroForm.status" class="px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-gray-50">
           <option value="">Todos status</option>
@@ -109,7 +109,7 @@
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
       <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
         <div>
-          <h3 class="font-bold text-gray-900">Lista de Vendas</h3>
+          <h3 class="font-bold text-gray-900">Lista de Ordens</h3>
           <p class="text-xs text-gray-400 mt-0.5">{{ vendas.total ?? 0 }} registros encontrados</p>
         </div>
       </div>
@@ -118,8 +118,8 @@
           <thead>
             <tr class="bg-gray-50">
               <th class="text-left text-xs font-semibold text-gray-500 px-6 py-3.5 uppercase tracking-wide">Nº Pedido</th>
-              <th class="text-left text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide">Cliente</th>
-              <th class="text-left text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide hidden lg:table-cell">Vendedor</th>
+              <th class="text-left text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide">Entidade</th>
+              <th class="text-left text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide hidden lg:table-cell">Responsável</th>
               <th class="text-right text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide">Total</th>
               <th class="text-left text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide hidden md:table-cell">Pagamento</th>
               <th class="text-center text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide">Status</th>
@@ -187,7 +187,7 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
                   </div>
-                  <p class="text-sm font-medium text-gray-400">Nenhuma venda encontrada</p>
+                  <p class="text-sm font-medium text-gray-400">Nenhuma ordem encontrada</p>
                 </div>
               </td>
             </tr>
@@ -205,9 +205,9 @@
     </div>
 
     <!-- Modal Cancelamento -->
-    <Modal :aberto="!!vendaCancelar" titulo="Cancelar Venda" @fechar="vendaCancelar = null">
+    <Modal :aberto="!!vendaCancelar" titulo="Cancelar Ordem" @fechar="vendaCancelar = null">
       <p class="text-sm text-gray-600">
-        Tem certeza que deseja cancelar o pedido
+        Tem certeza que deseja cancelar a ordem
         <strong class="text-gray-900">{{ vendaCancelar?.numero_pedido }}</strong>?
       </p>
       <template #footer>

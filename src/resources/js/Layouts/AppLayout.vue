@@ -6,12 +6,15 @@
     >
       <!-- Logo -->
       <div class="flex items-center gap-3 px-6 h-[66px] border-b border-gray-100 shrink-0">
-        <div class="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center shadow-md">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center shadow-md" style="background: linear-gradient(135deg, #0c3b6e, #1a5fa8);">
           <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
           </svg>
         </div>
-        <span class="text-xl font-bold text-gray-900">Vendas</span>
+        <div>
+          <span class="text-lg font-extrabold text-gray-900 tracking-widest">CINDEC</span>
+          <p class="text-xs text-gray-400 leading-none" style="font-size: 9px; letter-spacing: 0.05em;">Defesa Civil — MG</p>
+        </div>
       </div>
 
       <!-- Navegação -->
@@ -60,16 +63,16 @@
 
       <!-- Pro card -->
       <div class="px-4 pb-5 shrink-0">
-        <div class="rounded-2xl p-4 text-white" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)">
+        <div class="rounded-2xl p-4 text-white" style="background: linear-gradient(135deg, #0c3b6e 0%, #1a5fa8 100%)">
           <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center mb-3">
             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
           </div>
-          <p class="text-sm font-bold mb-0.5">Vendas Pro</p>
-          <p class="text-xs text-white/75 mb-3">Acesse todos os recursos do sistema completo.</p>
-          <button class="w-full bg-white text-indigo-600 text-xs font-bold py-2 rounded-xl hover:bg-indigo-50 transition-colors">
-            Obter Pro
+          <p class="text-sm font-bold mb-0.5">CINDEC Avançado</p>
+          <p class="text-xs text-white/75 mb-3">Acesse todos os modulos operacionais completos.</p>
+          <button class="w-full bg-white text-blue-800 text-xs font-bold py-2 rounded-xl hover:bg-blue-50 transition-colors">
+            Ativar Modulo
           </button>
         </div>
       </div>
@@ -184,8 +187,8 @@
                     </svg>
                   </div>
                   <div class="flex-1 min-w-0">
-                    <p class="text-xs font-semibold text-gray-900">Nova venda registrada</p>
-                    <p class="text-xs text-gray-500 mt-0.5">Pedido #VD-001 foi criado com sucesso</p>
+                    <p class="text-xs font-semibold text-gray-900">Nova aquisição registrada</p>
+                    <p class="text-xs text-gray-500 mt-0.5">Ordem #OP-001 foi criada com sucesso</p>
                     <p class="text-xs text-gray-400 mt-1">há 5 minutos</p>
                   </div>
                   <span class="w-2 h-2 bg-rose-500 rounded-full mt-1 shrink-0"></span>
@@ -197,8 +200,8 @@
                     </svg>
                   </div>
                   <div class="flex-1 min-w-0">
-                    <p class="text-xs font-semibold text-gray-900">Estoque baixo detectado</p>
-                    <p class="text-xs text-gray-500 mt-0.5">3 produtos estão com estoque crítico</p>
+                    <p class="text-xs font-semibold text-gray-900">Estoque crítico detectado</p>
+                    <p class="text-xs text-gray-500 mt-0.5">3 ativos tecnológicos com estoque crítico</p>
                     <p class="text-xs text-gray-400 mt-1">há 20 minutos</p>
                   </div>
                   <span class="w-2 h-2 bg-amber-500 rounded-full mt-1 shrink-0"></span>
@@ -210,8 +213,8 @@
                     </svg>
                   </div>
                   <div class="flex-1 min-w-0">
-                    <p class="text-xs font-semibold text-gray-900">Novo cliente cadastrado</p>
-                    <p class="text-xs text-gray-500 mt-0.5">Um novo cliente foi adicionado ao sistema</p>
+                    <p class="text-xs font-semibold text-gray-900">Nova entidade cadastrada</p>
+                    <p class="text-xs text-gray-500 mt-0.5">Uma nova entidade foi registrada no sistema</p>
                     <p class="text-xs text-gray-400 mt-1">há 1 hora</p>
                   </div>
                   <span class="w-2 h-2 bg-emerald-500 rounded-full mt-1 shrink-0"></span>
@@ -223,8 +226,8 @@
                     </svg>
                   </div>
                   <div class="flex-1 min-w-0">
-                    <p class="text-xs font-semibold text-gray-900">Venda concluída</p>
-                    <p class="text-xs text-gray-500 mt-0.5">Pedido #VD-995 foi finalizado</p>
+                    <p class="text-xs font-semibold text-gray-900">Operação concluída</p>
+                    <p class="text-xs text-gray-500 mt-0.5">Ordem #OP-995 foi finalizada</p>
                     <p class="text-xs text-gray-400 mt-1">há 3 horas</p>
                   </div>
                 </div>
