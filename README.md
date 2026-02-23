@@ -222,9 +222,9 @@ npm install && npm run build
 
 | E-mail | Senha | Papel |
 |---|---|---|
-| admin@basesaas.com | password | admin |
-| editor@basesaas.com | password | editor |
-| usuario@basesaas.com | password | usuario |
+| admin@base.com | password | admin |
+| editor@base.com | password | editor |
+| usuario@base.com | password | usuario |
 
 ---
 

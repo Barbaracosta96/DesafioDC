@@ -1,6 +1,6 @@
 <template>
   <AppLayout titulo="Produto">
-    <Head :title="produto.nome">
+    <Head :title="produto.nome" />
 
     <div class="flex items-center gap-3 mb-6">
       <Botao variant="fantasma" size="sm" :href="route('estoque.index')">
