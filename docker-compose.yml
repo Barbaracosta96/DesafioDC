@@ -71,7 +71,6 @@ services:
       --key-buffer-size=16M
       --tmp-table-size=32M
       --max-heap-table-size=32M
-      --query-cache-size=0
       --skip-log-bin
       --performance-schema=OFF
     volumes:
