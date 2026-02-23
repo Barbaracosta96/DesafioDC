@@ -13,7 +13,7 @@ class UsuariosSeeder extends Seeder
         $admin = User::firstOrCreate(
             ['email' => 'admin@base.com'],
             [
-                'name'     => 'Administrador',
+                'name'     => 'Dra. Beatriz Almeida',
                 'password' => Hash::make('password'),
                 'ativo'    => true,
             ]
@@ -23,7 +23,7 @@ class UsuariosSeeder extends Seeder
         $editor = User::firstOrCreate(
             ['email' => 'editor@base.com'],
             [
-                'name'     => 'Editor Base',
+                'name'     => 'Fernanda Costa',
                 'password' => Hash::make('password'),
                 'ativo'    => true,
             ]
@@ -33,7 +33,7 @@ class UsuariosSeeder extends Seeder
         $usuario = User::firstOrCreate(
             ['email' => 'usuario@base.com'],
             [
-                'name'     => 'Usuário Padrão',
+                'name'     => 'João Pedro Lima',
                 'password' => Hash::make('password'),
                 'ativo'    => true,
             ]

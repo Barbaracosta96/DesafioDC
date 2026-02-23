@@ -22,38 +22,58 @@
 
         <!-- 4 mini-cards coloridos -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          <CardVendaHoje
-            :valor="estatisticas.receita_mensal || 'R$ 0,00'"
-            descricao="Total de Vendas"
-            variacao="+8%"
-            bg="bg-rose-100"
-            icone-bg="bg-rose-500"
-            icone="dinheiro"
-          />
-          <CardVendaHoje
-            :valor="estatisticas.vendas_mes ?? 0"
-            descricao="Total de Pedidos"
-            variacao="+5%"
-            bg="bg-amber-50"
-            icone-bg="bg-amber-400"
-            icone="pedido"
-          />
-          <CardVendaHoje
-            :valor="estatisticas.total_produtos ?? 0"
-            descricao="Produtos em Estoque"
-            variacao="+1,2%"
-            bg="bg-emerald-50"
-            icone-bg="bg-emerald-500"
-            icone="produto"
-          />
-          <CardVendaHoje
-            :valor="estatisticas.total_clientes ?? 0"
-            descricao="Total de Clientes"
-            variacao="+0,5%"
-            bg="bg-purple-50"
-            icone-bg="bg-purple-500"
-            icone="cliente"
-          />
+          <!-- Card 1: Total de Vendas -->
+          <div class="rounded-2xl p-4 flex flex-col gap-2 bg-rose-100">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-rose-500 shrink-0">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-xl font-bold text-gray-900 leading-tight">{{ estatisticas.receita_mensal || 'R$ 1k' }}</p>
+              <p class="text-xs text-gray-500 mt-0.5">Total de Vendas</p>
+            </div>
+            <p class="text-xs font-medium text-emerald-600">+8% <span class="text-gray-400 font-normal">em relacao a ontem</span></p>
+          </div>
+          <!-- Card 2: Total de Pedidos -->
+          <div class="rounded-2xl p-4 flex flex-col gap-2 bg-amber-50">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-amber-400 shrink-0">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-xl font-bold text-gray-900 leading-tight">{{ estatisticas.vendas_mes ?? 300 }}</p>
+              <p class="text-xs text-gray-500 mt-0.5">Total de Pedidos</p>
+            </div>
+            <p class="text-xs font-medium text-emerald-600">+5% <span class="text-gray-400 font-normal">em relacao a ontem</span></p>
+          </div>
+          <!-- Card 3: Produtos em Estoque -->
+          <div class="rounded-2xl p-4 flex flex-col gap-2 bg-emerald-50">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-emerald-500 shrink-0">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-xl font-bold text-gray-900 leading-tight">{{ estatisticas.total_produtos ?? 5 }}</p>
+              <p class="text-xs text-gray-500 mt-0.5">Produtos em Estoque</p>
+            </div>
+            <p class="text-xs font-medium text-emerald-600">+1,2% <span class="text-gray-400 font-normal">em relacao a ontem</span></p>
+          </div>
+          <!-- Card 4: Total de Clientes -->
+          <div class="rounded-2xl p-4 flex flex-col gap-2 bg-purple-50">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-purple-500 shrink-0">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-xl font-bold text-gray-900 leading-tight">{{ estatisticas.total_clientes ?? 8 }}</p>
+              <p class="text-xs text-gray-500 mt-0.5">Total de Clientes</p>
+            </div>
+            <p class="text-xs font-medium text-emerald-600">+0,5% <span class="text-gray-400 font-normal">em relacao a ontem</span></p>
+          </div>
         </div>
       </div>
 
@@ -96,10 +116,10 @@
             <div class="flex flex-col justify-between text-xs text-gray-400 mr-2 h-40">
               <span>25k</span><span>20k</span><span>15k</span><span>10k</span><span>5k</span><span>0k</span>
             </div>
-            <div class="flex-1 flex items-end gap-1 h-40">
-              <div v-for="(item, i) in dadosReceitaSemanal" :key="i" class="flex-1 flex gap-0.5 items-end">
-                <div :style="{ height: item.online + '%' }" class="flex-1 rounded-t-sm bg-indigo-600 min-h-1" />
-                <div :style="{ height: item.offline + '%' }" class="flex-1 rounded-t-sm bg-emerald-400 min-h-1" />
+            <div class="flex-1 flex items-end gap-1" style="height:160px">
+              <div v-for="(item, i) in dadosReceitaSemanal" :key="i" class="flex-1 flex gap-0.5 items-end" style="height:100%">
+                <div :style="{ height: (item.online * 1.6) + 'px' }" class="flex-1 rounded-t-sm bg-indigo-600" />
+                <div :style="{ height: (item.offline * 1.6) + 'px' }" class="flex-1 rounded-t-sm bg-emerald-400" />
               </div>
             </div>
           </div>
@@ -152,11 +172,11 @@
       <!-- Meta vs Realidade -->
       <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
         <h3 class="font-bold text-gray-900 text-base mb-4">Meta vs Realidade</h3>
-        <div class="relative h-36">
-          <div class="flex items-end gap-2 h-full">
-            <div v-for="(item, i) in metaVsRealidade" :key="i" class="flex-1 flex gap-0.5 items-end">
-              <div :style="{ height: item.realidade + '%' }" class="flex-1 rounded-t-md bg-emerald-400 min-h-1" />
-              <div :style="{ height: item.meta + '%' }" class="flex-1 rounded-t-md bg-amber-400 min-h-1" />
+        <div class="relative" style="height:144px">
+          <div class="flex items-end gap-2" style="height:100%">
+            <div v-for="(item, i) in metaVsRealidade" :key="i" class="flex-1 flex gap-0.5 items-end" style="height:100%">
+              <div :style="{ height: (item.realidade * 1.44) + 'px' }" class="flex-1 rounded-t-md bg-emerald-400" />
+              <div :style="{ height: (item.meta * 1.44) + 'px' }" class="flex-1 rounded-t-md bg-amber-400" />
             </div>
           </div>
         </div>
@@ -177,7 +197,7 @@
     </div>
 
     <!-- Linha 3: Pedidos Recentes + Top Produtos + Volume vs Servico -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 items-start">
 
       <!-- Pedidos Recentes -->
       <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -185,7 +205,7 @@
           <h3 class="font-bold text-gray-900 text-base">Pedidos Recentes</h3>
           <Link :href="route('vendas.index')" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">Ver todos</Link>
         </div>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto max-h-72 overflow-y-auto">
           <table class="w-full">
             <thead>
               <tr class="bg-gray-50 border-b border-gray-100">
@@ -249,11 +269,11 @@
       <!-- Volume vs Nivel de Servico -->
       <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
         <h3 class="font-bold text-gray-900 text-base mb-4">Volume vs Nivel de Servico</h3>
-        <div class="relative h-40 mb-3">
-          <div class="flex items-end gap-2 h-full">
-            <div v-for="(item, i) in volumeServico" :key="i" class="flex-1 flex gap-0.5 items-end">
-              <div :style="{ height: item.volume + '%' }" class="flex-1 rounded-t-md bg-indigo-500 min-h-1" />
-              <div :style="{ height: item.servico + '%' }" class="flex-1 rounded-t-md bg-emerald-400 min-h-1" />
+        <div class="relative mb-3" style="height:160px">
+          <div class="flex items-end gap-2" style="height:100%">
+            <div v-for="(item, i) in volumeServico" :key="i" class="flex-1 flex gap-0.5 items-end" style="height:100%">
+              <div :style="{ height: (item.volume * 1.6) + 'px' }" class="flex-1 rounded-t-md bg-indigo-500" />
+              <div :style="{ height: (item.servico * 1.6) + 'px' }" class="flex-1 rounded-t-md bg-emerald-400" />
             </div>
           </div>
         </div>
@@ -286,35 +306,6 @@ const props = defineProps({
   vendasPorMes:  { type: Array,  default: () => [] },
   analiseVendas: { type: Array,  default: () => [] },
 });
-
-const CardVendaHoje = {
-  props: ['valor', 'descricao', 'variacao', 'bg', 'iconeBg', 'icone'],
-  template: `
-    <div :class="['rounded-2xl p-4 flex flex-col gap-2', bg]">
-      <div :class="['w-10 h-10 rounded-xl flex items-center justify-center', iconeBg]">
-        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="iconePath" />
-        </svg>
-      </div>
-      <div>
-        <p class="text-xl font-bold text-gray-900 leading-tight">{{ valor }}</p>
-        <p class="text-xs text-gray-500 mt-0.5">{{ descricao }}</p>
-      </div>
-      <p class="text-xs font-medium text-emerald-600">{{ variacao }} <span class="text-gray-400 font-normal">em relacao a ontem</span></p>
-    </div>
-  `,
-  computed: {
-    iconePath() {
-      const map = {
-        dinheiro: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
-        pedido:   'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
-        produto:  'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z',
-        cliente:  'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z',
-      };
-      return map[this.icone] ?? map.dinheiro;
-    },
-  },
-};
 
 const dadosReceitaSemanal = [
   { dia: 'Seg', online: 60, offline: 40 },

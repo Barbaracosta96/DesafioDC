@@ -11,11 +11,11 @@ class ProdutosSeeder extends Seeder
     public function run(): void
     {
         $categorias = [
-            ['nome' => 'Eletrônicos', 'descricao' => 'Produtos eletrônicos em geral'],
-            ['nome' => 'Acessórios', 'descricao' => 'Acessórios para eletrônicos'],
-            ['nome' => 'Fotografia', 'descricao' => 'Equipamentos fotográficos'],
-            ['nome' => 'Vestuário', 'descricao' => 'Roupas e calçados'],
-            ['nome' => 'Informática', 'descricao' => 'Computadores e periféricos'],
+            ['nome' => 'Medicamentos',       'descricao' => 'Fármacos e medicamentos controlados e OTC'],
+            ['nome' => 'Equipamentos Médicos', 'descricao' => 'Aparelhos e equipamentos para uso clínico'],
+            ['nome' => 'Material de Curativo', 'descricao' => 'Curativos, ataduras e material cirúrgico'],
+            ['nome' => 'Descartáveis',        'descricao' => 'Material descartável de uso único'],
+            ['nome' => 'Higiene e Limpeza',   'descricao' => 'Produtos de higiene e antissépticos'],
         ];
 
         foreach ($categorias as $cat) {
@@ -23,16 +23,18 @@ class ProdutosSeeder extends Seeder
         }
 
         $produtos = [
-            ['categoria' => 'Fotografia',  'nome' => 'Lente de Câmera 50mm', 'sku' => 'FOTO-001', 'custo' => 450.00, 'venda' => 890.00, 'qtd' => 25],
-            ['categoria' => 'Vestuário',   'nome' => 'NIKE Shoes Black Pattern', 'sku' => 'VEST-001', 'custo' => 150.00, 'venda' => 299.00, 'qtd' => 42],
-            ['categoria' => 'Vestuário',   'nome' => 'Vestido Sleep Preto', 'sku' => 'VEST-002', 'custo' => 45.00, 'venda' => 89.00, 'qtd' => 30],
-            ['categoria' => 'Eletrônicos', 'nome' => 'Fone Bluetooth Premium', 'sku' => 'ELET-001', 'custo' => 120.00, 'venda' => 249.99, 'qtd' => 18],
-            ['categoria' => 'Informática', 'nome' => 'Mouse Sem Fio Ergonômico', 'sku' => 'INFO-001', 'custo' => 35.00, 'venda' => 79.90, 'qtd' => 60],
-            ['categoria' => 'Informática', 'nome' => 'Teclado Mecânico RGB', 'sku' => 'INFO-002', 'custo' => 180.00, 'venda' => 349.00, 'qtd' => 15],
-            ['categoria' => 'Acessórios',  'nome' => 'Cabo USB-C 2m', 'sku' => 'ACES-001', 'custo' => 8.00, 'venda' => 29.90, 'qtd' => 3],
-            ['categoria' => 'Eletrônicos', 'nome' => 'Smartwatch Fitness', 'sku' => 'ELET-002', 'custo' => 220.00, 'venda' => 499.00, 'qtd' => 12],
-            ['categoria' => 'Fotografia',  'nome' => 'Tripé Profissional 1.8m', 'sku' => 'FOTO-002', 'custo' => 85.00, 'venda' => 179.90, 'qtd' => 8],
-            ['categoria' => 'Acessórios',  'nome' => 'Capa Protetora Celular', 'sku' => 'ACES-002', 'custo' => 12.00, 'venda' => 39.90, 'qtd' => 2],
+            ['categoria' => 'Medicamentos',        'nome' => 'Dipirona Sódica 500mg — caixa 20 comp.', 'sku' => 'MED-001', 'custo' => 4.50,   'venda' => 12.90,  'qtd' => 200],
+            ['categoria' => 'Medicamentos',        'nome' => 'Ibuprofeno 600mg — caixa 20 comp.',      'sku' => 'MED-002', 'custo' => 6.00,   'venda' => 18.50,  'qtd' => 150],
+            ['categoria' => 'Medicamentos',        'nome' => 'Omeprazol 20mg — caixa 28 cáps.',        'sku' => 'MED-003', 'custo' => 8.00,   'venda' => 24.90,  'qtd' => 120],
+            ['categoria' => 'Equipamentos Médicos', 'nome' => 'Esfigmomanômetro Digital de Pulso',       'sku' => 'EQP-001', 'custo' => 55.00,  'venda' => 129.90, 'qtd' => 30],
+            ['categoria' => 'Equipamentos Médicos', 'nome' => 'Termômetro Clínico Digital',              'sku' => 'EQP-002', 'custo' => 12.00,  'venda' => 34.90,  'qtd' => 80],
+            ['categoria' => 'Equipamentos Médicos', 'nome' => 'Oxímetro de Pulso Portátil',              'sku' => 'EQP-003', 'custo' => 38.00,  'venda' => 89.90,  'qtd' => 45],
+            ['categoria' => 'Material de Curativo', 'nome' => 'Curativo Adesivo Estéril — caixa 100un.', 'sku' => 'CUR-001', 'custo' => 9.00,   'venda' => 22.00,  'qtd' => 300],
+            ['categoria' => 'Material de Curativo', 'nome' => 'Gaze Estéril 7,5x7,5cm — pacote 10un.',  'sku' => 'CUR-002', 'custo' => 3.50,   'venda' => 9.90,   'qtd' => 500],
+            ['categoria' => 'Descartáveis',        'nome' => 'Seringas 5ml com Agulha — caixa 100un.', 'sku' => 'DSC-001', 'custo' => 18.00,  'venda' => 45.00,  'qtd' => 40],
+            ['categoria' => 'Descartáveis',        'nome' => 'Luvas Procedimento M — caixa 100un.',    'sku' => 'DSC-002', 'custo' => 22.00,  'venda' => 55.90,  'qtd' => 60],
+            ['categoria' => 'Higiene e Limpeza',   'nome' => 'Álcool Etílico 70% — frasco 1L',         'sku' => 'HIG-001', 'custo' => 6.50,   'venda' => 15.90,  'qtd' => 180],
+            ['categoria' => 'Higiene e Limpeza',   'nome' => 'Sabonete Antisséptico Hospitalar 500ml',  'sku' => 'HIG-002', 'custo' => 9.00,   'venda' => 24.50,  'qtd' => 3],
         ];
 
         foreach ($produtos as $p) {
