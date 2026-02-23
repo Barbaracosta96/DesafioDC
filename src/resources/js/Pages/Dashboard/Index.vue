@@ -43,7 +43,7 @@
               </svg>
             </div>
             <div>
-              <p class="text-xl font-bold text-gray-900 leading-tight">{{ estatisticas.vendas_mes ?? 300 }}</p>
+              <p class="text-xl font-bold text-gray-900 leading-tight">{{ estatisticas.vendas_mes ?? 0 }}</p>
               <p class="text-xs text-gray-500 mt-0.5">Total de Pedidos</p>
             </div>
             <p class="text-xs font-medium text-emerald-600">+5% <span class="text-gray-400 font-normal">em relacao a ontem</span></p>
@@ -56,7 +56,7 @@
               </svg>
             </div>
             <div>
-              <p class="text-xl font-bold text-gray-900 leading-tight">{{ estatisticas.total_produtos ?? 5 }}</p>
+              <p class="text-xl font-bold text-gray-900 leading-tight">{{ estatisticas.total_produtos ?? 0 }}</p>
               <p class="text-xs text-gray-500 mt-0.5">Produtos em Estoque</p>
             </div>
             <p class="text-xs font-medium text-emerald-600">+1,2% <span class="text-gray-400 font-normal">em relacao a ontem</span></p>
@@ -69,7 +69,7 @@
               </svg>
             </div>
             <div>
-              <p class="text-xl font-bold text-gray-900 leading-tight">{{ estatisticas.total_clientes ?? 8 }}</p>
+              <p class="text-xl font-bold text-gray-900 leading-tight">{{ estatisticas.total_clientes ?? 0 }}</p>
               <p class="text-xs text-gray-500 mt-0.5">Total de Clientes</p>
             </div>
             <p class="text-xs font-medium text-emerald-600">+0,5% <span class="text-gray-400 font-normal">em relacao a ontem</span></p>
@@ -160,11 +160,11 @@
         <div class="flex gap-6 mt-3 text-xs text-gray-500">
           <div>
             <div class="flex items-center gap-1 mb-0.5"><span class="w-2.5 h-0.5 rounded bg-emerald-500 inline-block"></span>Mes Passado</div>
-            <p class="font-bold text-gray-800 text-sm">R$ {{ estatisticas.receita_mes_passado ?? '3.004' }}</p>
+            <p class="font-bold text-gray-800 text-sm">{{ estatisticas.receita_mes_passado || 'R$ 0,00' }}</p>
           </div>
           <div>
             <div class="flex items-center gap-1 mb-0.5"><span class="w-2.5 h-0.5 rounded bg-indigo-500 inline-block"></span>Este Mes</div>
-            <p class="font-bold text-gray-800 text-sm">R$ {{ estatisticas.receita_mensal ?? '4.504' }}</p>
+            <p class="font-bold text-gray-800 text-sm">{{ estatisticas.receita_mensal || 'R$ 0,00' }}</p>
           </div>
         </div>
       </div>
@@ -186,11 +186,11 @@
         <div class="flex gap-4 mt-3 text-xs">
           <div class="flex items-center gap-1.5 text-gray-500">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span>
-            Realidade <span class="font-bold text-gray-900 ml-1">{{ estatisticas.meta_realidade ?? '8.823' }}</span>
+            Realidade <span class="font-bold text-gray-900 ml-1">{{ estatisticas.meta_realidade ?? '0,00' }}</span>
           </div>
           <div class="flex items-center gap-1.5 text-gray-500">
             <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span>
-            Meta <span class="font-bold text-gray-900 ml-1">{{ estatisticas.meta_alvo ?? '12.122' }}</span>
+            Meta <span class="font-bold text-gray-900 ml-1">{{ estatisticas.meta_alvo ?? '0,00' }}</span>
           </div>
         </div>
       </div>
@@ -280,11 +280,11 @@
         <div class="flex gap-5 items-center text-xs text-gray-500">
           <div class="flex items-center gap-1.5">
             <span class="w-2.5 h-2.5 rounded-full bg-indigo-500 inline-block"></span>
-            Volume <span class="font-bold text-gray-900 ml-1">{{ estatisticas.volume_total ?? '1.135' }}</span>
+            Volume <span class="font-bold text-gray-900 ml-1">{{ estatisticas.volume_total ?? '0' }}</span>
           </div>
           <div class="flex items-center gap-1.5">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span>
-            Servicos <span class="font-bold text-gray-900 ml-1">{{ estatisticas.servicos_total ?? '635' }}</span>
+            Servicos <span class="font-bold text-gray-900 ml-1">{{ estatisticas.servicos_total ?? '0' }}</span>
           </div>
         </div>
       </div>

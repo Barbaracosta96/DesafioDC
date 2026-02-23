@@ -53,6 +53,24 @@ class DashboardController extends Controller
             ->whereRaw('quantidade_estoque <= estoque_minimo')
             ->count();
 
+        $receitaMesPassado = Venda::where('status', 'concluido')
+            ->whereMonth('data_venda', now()->subMonth()->month)
+            ->whereYear('data_venda', now()->subMonth()->year)
+            ->sum('total');
+
+        $receitaAno = Venda::where('status', 'concluido')
+            ->whereYear('data_venda', now()->year)
+            ->sum('total');
+
+        $metaAlvo = $receitaAno > 0 ? $receitaAno * 1.20 : 0;
+
+        $volumeTotal = \App\Models\ItemVenda::whereHas(
+            'venda',
+            fn($q) => $q->where('status', 'concluido')
+        )->sum('quantidade');
+
+        $servicosTotal = Venda::where('status', 'concluido')->count();
+
         $vendasPorMes = collect(range(5, 0))->map(function ($mesesAtras) {
             $data = \Carbon\Carbon::now()->subMonths($mesesAtras);
             return [
@@ -78,9 +96,14 @@ class DashboardController extends Controller
                 'estoque_total'          => (int) $produtosEstoque,
                 'vendas_mes'             => $totalVendas,
                 'receita_mensal'         => 'R$ ' . number_format($receitaMensal, 2, ',', '.'),
+                'receita_mes_passado'    => 'R$ ' . number_format($receitaMesPassado, 2, ',', '.'),
                 'estoque_baixo'          => $estoqueBaixo,
                 'vendas_hoje'            => Venda::whereDate('data_venda', now()->toDateString())->count(),
                 'vendas_pendentes'       => Venda::where('status', 'pendente')->count(),
+                'meta_realidade'         => number_format($receitaAno, 2, ',', '.'),
+                'meta_alvo'              => number_format($metaAlvo, 2, ',', '.'),
+                'volume_total'           => number_format((int) $volumeTotal, 0, ',', '.'),
+                'servicos_total'         => number_format($servicosTotal, 0, ',', '.'),
             ],
             'vendasRecentes' => $vendasRecentes,
             'topProdutos'    => $topProdutos,

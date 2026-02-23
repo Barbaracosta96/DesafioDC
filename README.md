@@ -12,7 +12,7 @@ Aplicação SaaS de gestão comercial desenvolvida como desafio técnico, constr
 | Frontend | Vue.js 3 + Inertia.js 2 |
 | Estilização | Tailwind CSS v4 |
 | Banco de Dados | MySQL 8.0 |
-| Infraestrutura | Docker (PHP-FPM, Nginx, MySQL, Node) |
+| Infraestrutura | Docker + Laravel Sail (docker-compose customizado) |
 | ACL | Spatie Laravel Permission v6 |
 | Testes | PHPUnit 11 |
 
@@ -90,7 +90,92 @@ src/
 
 ## Diagrama do Banco de Dados
 
+### ERD — Relacionamentos
+
+```mermaid
+erDiagram
+    users {
+        bigint id PK
+        varchar name
+        varchar email UK
+        varchar password
+        boolean ativo
+    }
+    categorias {
+        bigint id PK
+        varchar nome
+        text descricao
+        boolean ativo
+    }
+    produtos {
+        bigint id PK
+        bigint categoria_id FK
+        varchar nome
+        varchar codigo_sku UK
+        decimal preco_custo
+        decimal preco_venda
+        int quantidade_estoque
+        int estoque_minimo
+        varchar unidade
+        boolean ativo
+        timestamp deleted_at
+    }
+    clientes {
+        bigint id PK
+        varchar nome
+        varchar tipo
+        varchar cpf_cnpj UK
+        varchar email
+        varchar telefone
+        varchar cidade
+        varchar estado
+        boolean ativo
+    }
+    vendas {
+        bigint id PK
+        varchar numero_pedido UK
+        bigint cliente_id FK
+        bigint user_id FK
+        varchar status
+        varchar forma_pagamento
+        decimal subtotal
+        decimal desconto
+        decimal total
+        datetime data_venda
+        timestamp deleted_at
+    }
+    itens_venda {
+        bigint id PK
+        bigint venda_id FK
+        bigint produto_id FK
+        int quantidade
+        decimal preco_unitario
+        decimal desconto
+        decimal subtotal
+    }
+    movimentacoes_estoque {
+        bigint id PK
+        bigint produto_id FK
+        bigint user_id FK
+        bigint venda_id FK
+        varchar tipo
+        int quantidade
+        int quantidade_anterior
+        int quantidade_posterior
+        text motivo
+    }
+
+    categorias ||--o{ produtos : "classifica"
+    users ||--o{ vendas : "registra"
+    clientes ||--o{ vendas : "realiza"
+    vendas ||--|{ itens_venda : "contém"
+    produtos ||--o{ itens_venda : "aparece em"
+    produtos ||--o{ movimentacoes_estoque : "rastreado em"
+    users ||--o{ movimentacoes_estoque : "opera"
+    vendas ||--o{ movimentacoes_estoque : "origina"
 ```
+
+### Detalhamento das Colunas
 users
 ├── id (PK)
 ├── name
@@ -179,6 +264,8 @@ roles, permissions, model_has_roles, model_has_permissions, role_has_permissions
 - `just` instalado ([instalar](https://github.com/casey/just)) — opcional, mas recomendado
 
 ### Subir o ambiente
+
+> **Nota sobre Laravel Sail:** O projeto inclui `laravel/sail` como dependência de desenvolvimento (`require-dev`), porém utiliza um **docker-compose customizado** com containers dedicados (PHP-FPM 8.4, Nginx, MySQL 8.0 e Node) para maior controle sobre a configuração de cada serviço. Os comandos abaixo operam diretamente via `docker-compose` ou pelo atalho `just`, sem necessidade de `./vendor/bin/sail`.
 
 ```bash
 # 1. Clone o repositório
