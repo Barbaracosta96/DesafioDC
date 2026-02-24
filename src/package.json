@@ -6,8 +6,18 @@
         "build": "vite build",
         "dev": "vite"
     },
+    "dependencies": {
+        "@heroicons/vue": "^2.2",
+        "@inertiajs/vue3": "^2.0",
+        "@vueuse/core": "^13.0",
+        "apexcharts": "^3.49",
+        "vue": "^3.5",
+        "vue-apexcharts": "^1.8",
+        "ziggy-js": "^2.3"
+    },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",
+        "@vitejs/plugin-vue": "^5.2",
         "axios": "^1.11.0",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^2.0.0",

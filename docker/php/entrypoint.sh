@@ -34,6 +34,18 @@ fi
 echo "Running migrations..."
 php artisan migrate --force
 
+# Auto-setup: Seed only on first boot
+if [ ! -f "/var/www/storage/.seeded" ]; then
+    echo "Seeding database with demo data..."
+    php artisan db:seed --force && touch /var/www/storage/.seeded
+fi
+
+# Auto-setup: Storage link
+if [ ! -L "/var/www/public/storage" ]; then
+    echo "Creating storage symlink..."
+    php artisan storage:link
+fi
+
 # Reset permissions just in case
 if [ "$FIX_PERMISSIONS" = "true" ] || [ ! -d "/var/www/storage" ]; then
     echo "Fixing permissions..."
