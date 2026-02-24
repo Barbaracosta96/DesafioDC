@@ -1,298 +1,164 @@
-﻿# CINDEC/MG — Sistema de Gestão Operacional em Defesa Civil
+# CINDEC — Documentação Técnica Laravel
 
-Plataforma SaaS de gestão operacional do **Centro de Inteligência em Defesa Civil de Minas Gerais**, desenvolvida com **Laravel 11**, **Vue 3**, **Inertia.js** e **Tailwind CSS v4**, rodando em ambiente **Docker**.
-
-O sistema gerencia ativos tecnológicos, ordens de fornecimento, entidades parceiras e operações da Defesa Civil mineira.
+> Esta documentação complementa o [README principal](../README.md) com detalhes técnicos específicos do desenvolvimento Laravel.
 
 ---
 
-## Sumario
+## Rotas
 
-- [Tecnologias](#tecnologias)
-- [Arquitetura](#arquitetura)
-- [Pré-requisitos](#pre-requisitos)
-- [Configuracao e Execucao](#configuracao-e-execucao)
-- [Credenciais de Acesso](#credenciais-de-acesso)
-- [Comandos Uteis (Justfile)](#comandos-uteis-justfile)
-- [Executando os Testes](#executando-os-testes)
-- [Modulos](#modulos)
-- [Estrutura do Projeto](#estrutura-do-projeto)
+### Públicas (middleware `guest`)
 
----
+| Método | URI                          | Controller            | Nome              |
+|--------|------------------------------|-----------------------|-------------------|
+| GET    | `/entrar`                    | LoginController       | `login`           |
+| POST   | `/entrar`                    | LoginController       | `login.store`     |
+| GET    | `/cadastro`                  | CadastroController    | `cadastro`        |
+| POST   | `/cadastro`                  | CadastroController    | `cadastro.store`  |
+| GET    | `/esqueci-a-senha`           | EsqueciSenhaController| `password.request`|
+| POST   | `/esqueci-a-senha`           | EsqueciSenhaController| `password.email`  |
+| GET    | `/redefinir-senha/{token}`   | RedefinirSenhaController| `password.reset`|
+| POST   | `/redefinir-senha`           | RedefinirSenhaController| `password.update`|
 
-## Tecnologias
+### Autenticadas (middleware `auth`)
 
-| Camada       | Tecnologia                          |
-|--------------|-------------------------------------|
-| Backend      | PHP 8.4, Laravel 11                 |
-| Frontend     | Vue 3, Inertia.js v2                |
-| Estilizacao  | Tailwind CSS v4                     |
-| Build        | Vite 7 com `@tailwindcss/vite`      |
-| Banco        | MySQL 8.0                           |
-| Auth/ACL     | Spatie Laravel Permission           |
-| Testes       | PHPUnit 11                          |
-| Ambiente     | Docker + Docker Compose             |
-| Orquestrador | [Just](https://github.com/casey/just) |
-
----
-
-## Arquitetura
-
-O projeto segue os principios **SOLID** e **Clean Code**, com separacao clara de responsabilidades:
-
-```
-app/
-+-- Http/
-|   +-- Controllers/        # Apenas orquestracao HTTP
-|   +-- Requests/           # Form Requests - validacao e sanitizacao de entrada
-|   +-- Resources/          # API Resources
-+-- Models/                 # Eloquent Models com relacionamentos e accessors
-+-- Services/               # Camada de negocio isolada e testavel
-    +-- VendaService.php    # Criacao de vendas, cancelamento com estorno de estoque
-    +-- EstoqueService.php  # Criacao e atualizacao de produtos com movimentacoes
-```
-
-### Fluxo de uma requisicao
-
-```
-Request -> FormRequest (valida/sanitiza) -> Controller (injeta Service) -> Service (logica de negocio) -> Model (persiste)
-```
-
-### Form Requests criados
-
-| Arquivo | Responsabilidade |
-|---------|-----------------|
-| `StoreVendaRequest` | Valida nova venda e itens |
-| `UpdateVendaRequest` | Valida atualizacao de status |
-| `StoreProdutoRequest` | Valida criacao de produto |
-| `UpdateProdutoRequest` | Idem, com unicidade ignorando proprio ID |
-| `StoreClienteRequest` | Valida dados de cliente (CPF/CNPJ, e-mail unicos) |
-| `UpdateClienteRequest` | Idem com regras de exclusao do proprio registro |
-| `StoreCategoriaRequest` | Valida nome unico de categoria |
-| `UpdateCategoriaRequest` | Idem com exclusao do proprio registro |
+| Método       | URI                       | Controller             | Nome                    |
+|--------------|---------------------------|------------------------|-------------------------|
+| GET          | `/`                       | DashboardController    | `dashboard`             |
+| POST         | `/sair`                   | LoginController        | `logout`                |
+| GET/POST/... | `/estoque`                | EstoqueController      | `estoque.*`             |
+| GET          | `/vendas/exportar`        | VendasController       | `vendas.exportar`       |
+| GET/POST/... | `/vendas`                 | VendasController       | `vendas.*`              |
+| GET/POST/... | `/clientes`               | ClientesController     | `clientes.*`            |
+| GET          | `/categorias`             | CategoriasController   | `categorias.index`      |
+| POST         | `/categorias`             | CategoriasController   | `categorias.store`      |
+| PUT          | `/categorias/{categoria}` | CategoriasController   | `categorias.update`     |
+| DELETE       | `/categorias/{categoria}` | CategoriasController   | `categorias.destroy`    |
+| GET/POST/... | `/usuarios`               | UsuariosController     | `usuarios.*` (admin)    |
 
 ---
 
-## Pre-requisitos
-
-- [Docker](https://docs.docker.com/get-docker/) e Docker Compose
-- [Just](https://github.com/casey/just#installation) (orquestrador de tarefas)
-
----
-
-## Configuracao e Execucao
-
-### 1. Clonar o repositorio
+## Comandos Artisan Úteis
 
 ```bash
-git clone <url-do-repositorio>
-cd DesafioDC
-```
+# Executar migrations com seed
+php artisan migrate:fresh --seed
 
-### 2. Configurar variaveis de ambiente
+# Executar apenas o seeder de roles/permissões
+php artisan db:seed --class=RolesPermissoesSeeder
 
-```bash
-cp src/.env.example src/.env
-```
+# Executar testes
+php artisan test
 
-Verifique as variaveis de banco no `src/.env`:
+# Limpar cache
+php artisan cache:clear
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
 
-```env
-DB_CONNECTION=mysql
-DB_HOST=db
-DB_PORT=3306
-DB_DATABASE=laravel
-DB_USERNAME=laravel
-DB_PASSWORD=secret
-```
-
-### 3. Subir os containers
-
-```bash
-just up
-```
-
-Isso sobe os servicos: `app` (PHP-FPM), `webserver` (Nginx), `db` (MySQL) e `node` (Vite).
-
-### 4. Instalar dependencias PHP
-
-```bash
-just composer install
-```
-
-### 5. Gerar chave da aplicacao
-
-```bash
-just artisan key:generate
-```
-
-### 6. Executar migrations e seeders
-
-```bash
-just fresh
-```
-
-Ou apenas migrations sem recriar o banco:
-
-```bash
-just migrate
-```
-
-### 7. Instalar dependencias JS e compilar assets
-
-```bash
-just npm install
-just npm run build
-```
-
-Para desenvolvimento com hot-reload:
-
-```bash
-just npm run dev
-```
-
-### 8. Acessar a aplicacao
-
-| Servico   | URL                       |
-|-----------|---------------------------|
-| Aplicacao | http://localhost:8081      |
-| Vite HMR  | http://localhost:5173      |
-| MySQL     | localhost:3306             |
-
----
-
-## Credenciais de Acesso
-
-Apos executar `just fresh` (migrations + seed):
-
-| Perfil        | E-mail                          | Senha      |
-|---------------|---------------------------------|------------|
-| Administrador | admin@cindec.mg.gov.br          | `password` |
-| Editor        | editor@cindec.mg.gov.br         | `password` |
-| Operador      | operador@cindec.mg.gov.br       | `password` |
-
-### Permissoes por perfil
-
-| Modulo     | Admin | Editor | Usuario |
-|------------|-------|--------|---------|
-| Dashboard  | si    | si     | si      |
-| Estoque    | CRUD  | CRU    | R       |
-| Vendas     | CRUD  | CRU    | R       |
-| Clientes   | CRUD  | CRU    | R       |
-| Categorias | CRUD  | CR     | R       |
-| Usuarios   | CRUD  | nao    | nao     |
-
----
-
-## Comandos Uteis (Justfile)
-
-```bash
-just up              # Sobe todos os containers
-just down            # Para todos os containers
-just restart         # Reinicia os containers
-just logs            # Exibe logs de todos os servicos
-just logs app        # Logs de um servico especifico
-
-just migrate         # Executa as migrations
-just fresh           # Recria o banco com seed completo
-just seed            # Executa apenas os seeders
-just rollback        # Desfaz a ultima migration
-
-just artisan <cmd>   # Executa qualquer comando artisan
-just composer <cmd>  # Executa comandos do Composer
-just npm <cmd>       # Executa comandos do npm
-
-just test            # Executa a suite de testes PHPUnit
-just test-api        # Executa testes de API em shell
-
-just clear           # Limpa todos os caches Laravel
-just pint            # Formata o codigo com Laravel Pint
+# Gerar chave da aplicação
+php artisan key:generate
 ```
 
 ---
 
-## Executando os Testes
+## Seeders Disponíveis
 
-### Testes PHPUnit (Feature + Unit)
-
-```bash
-just test
-```
-
-Filtrando por classe:
-
-```bash
-just artisan test --filter AuthTest
-just artisan test --filter EstoqueTest
-just artisan test --filter VendaTest
-just artisan test --filter ClienteTest
-```
-
-### Cobertura de testes implementada
-
-| Arquivo de Teste         | O que cobre |
-|--------------------------|-------------|
-| `Feature/AuthTest.php`   | Login, logout, redirecionamento sem autenticacao |
-| `Feature/EstoqueTest.php`| Criacao com movimentacao de estoque, atualizacao com ajuste, exclusao |
-| `Feature/VendaTest.php`  | Criar venda decrementa estoque, cancelamento devolve estoque (estorno) |
-| `Feature/ClienteTest.php`| CRUD completo, unicidade de email/cpf, mass assignment protection |
+| Seeder                   | Descrição                                             |
+|--------------------------|-------------------------------------------------------|
+| `RolesPermissoesSeeder`  | Cria roles (admin, editor, usuario) e 20 permissões   |
+| `UsuariosSeeder`         | Cria 3 usuários padrão (um por role)                  |
+| `ProdutosSeeder`         | Cria categorias e produtos de exemplo                 |
+| `VendasSeeder`           | Cria clientes e vendas de exemplo                     |
 
 ---
 
-## Modulos
+## Factories
 
-### Dashboard
-- KPIs: operações do dia, valores operacionais, total de entidades, ativos abaixo do mínimo operacional
-- Gráficos: Volume Operacional, Valores Totais, Desempenho Operacional, Volume vs Eficiência
-- Tabelas: Ordens Recentes, Ativos em Destaque
-
-### Ativos Tecnológicos (Estoque)
-- CRUD de equipamentos e ativos com código de patrimônio/SKU, custo de aquisição, valor de referência, unidade e quantidade mínima operacional
-- Histórico completo de movimentações (entrada, saída, ajuste, estorno)
-- Alertas de inventário abaixo do mínimo operacional
-
-### Ordens de Fornecimento (Vendas)
-- Registro de ordens com múltiplos ativos
-- Decremento automático de inventário ao criar
-- Estorno automático ao cancelar
-- Status: `pendente`, `processando`, `concluido`, `cancelado`
-- Formas de pagamento: transferência, empenho, contrato, outros
-
-### Entidades (Clientes)
-- Cadastro de órgãos públicos, municípios, coordenadorias e parceiros institucionais
-- Campos de endereço completo
-- Histórico de ordens por entidade
-
-### Categorias
-- Gerenciamento de categorias de ativos tecnológicos
-- Protegido contra exclusão de categorias com ativos vinculados
-
-### Usuários *(somente admin)*
-- CRUD de operadores com atribuição de roles institucionais
-- Roles: `admin`, `editor`, `usuario`
+| Factory          | Modelo    |
+|------------------|-----------|
+| `UserFactory`    | `User`    |
+| `ClienteFactory` | `Cliente` |
+| `ProdutoFactory` | `Produto` |
 
 ---
 
-## Estrutura do Projeto
+## Service Layer
 
-```
-DesafioDC/
-+-- docker/                  # Dockerfiles e configuracoes (PHP, Nginx, Node, MySQL)
-+-- src/                     # Codigo-fonte Laravel
-|   +-- app/
-|   |   +-- Http/
-|   |   |   +-- Controllers/ # VendasController, EstoqueController, etc.
-|   |   |   +-- Requests/    # 8 Form Requests para validacao e sanitizacao
-|   |   +-- Models/          # Eloquent Models
-|   |   +-- Services/        # VendaService, EstoqueService
-|   +-- database/
-|   |   +-- factories/       # ProdutoFactory, ClienteFactory, UserFactory
-|   |   +-- migrations/      # Schema do banco (6 migracoes customizadas)
-|   |   +-- seeders/         # Dados iniciais (usuarios, produtos, vendas)
-|   +-- resources/js/        # Vue 3 Pages, Components, Layouts
-|   +-- routes/web.php       # Rotas da aplicacao
-|   +-- tests/Feature/       # Testes de feature (PHPUnit)
-+-- tests/                   # Testes de integracao em shell
-+-- docker-compose.yml
-+-- justfile                 # Comandos de orquestracao
-```
+### `EstoqueService`
+
+| Método       | Descrição                                                        |
+|--------------|------------------------------------------------------------------|
+| `criar()`    | Cria produto + registra movimentação de entrada se qtd > 0      |
+| `atualizar()`| Atualiza produto + registra ajuste se quantidade mudou          |
+| `movimentar()`| Registra entrada ou saída avulsa com atualização de estoque    |
+
+### `VendaService`
+
+| Método        | Descrição                                                       |
+|---------------|-----------------------------------------------------------------|
+| `criar()`     | Cria venda, itens, calcula totais, baixa estoque (se concluída)|
+| `atualizar()` | Atualiza venda com recálculo de estoque e totais               |
+| `cancelar()`  | Cancela venda e repõe estoque dos itens                        |
+
+---
+
+## Componentes Vue.js Globais (`resources/js/Components/`)
+
+| Componente       | Props principais                        | Uso                              |
+|------------------|-----------------------------------------|----------------------------------|
+| `Botao.vue`      | `variant`, `carregando`, `disabled`     | Botões da aplicação              |
+| `InputField.vue` | `label`, `modelValue`, `erro`, `type`  | Campos de formulário             |
+| `SelectField.vue`| `label`, `modelValue`, `options`, `erro`| Selects de formulário           |
+| `Modal.vue`      | `aberto`, `titulo`                      | Modais em geral                  |
+| `Badge.vue`      | `variant` (verde, amarelo, vermelho...) | Badges de status                 |
+| `NavItem.vue`    | `href`, `active`, `icon`               | Itens do menu lateral            |
+| `Paginacao.vue`  | `links` (array de links Inertia)       | Paginação de listas              |
+
+---
+
+## Validação
+
+Todos os endpoints utilizam **Form Requests** dedicados:
+
+- `App\Http\Requests\Auth\LoginRequest`
+- `App\Http\Requests\Auth\CadastroRequest`
+- `App\Http\Requests\Auth\EsqueciSenhaRequest`
+- `App\Http\Requests\Auth\RedefinirSenhaRequest`
+- `App\Http\Requests\StoreProdutoRequest`
+- `App\Http\Requests\UpdateProdutoRequest`
+- `App\Http\Requests\StoreVendaRequest`
+- `App\Http\Requests\UpdateVendaRequest`
+- `App\Http\Requests\StoreClienteRequest`
+- `App\Http\Requests\UpdateClienteRequest`
+- `App\Http\Requests\StoreCategoriaRequest`
+- `App\Http\Requests\UpdateCategoriaRequest`
+- `App\Http\Requests\StoreUsuarioRequest`
+- `App\Http\Requests\UpdateUsuarioRequest`
+
+---
+
+## Padrão de Resposta Inertia
+
+Todos os controllers retornam `Inertia::render('Modulo/Pagina', [...])`.  
+Os dados são compartilhados via `HandleInertiaRequests` middleware (user, auth, ziggy).
+
+Erros de validação são automaticamente injetados no `$page.props.errors` no Vue.  
+Flash messages (`sucesso`) ficam em `$page.props.flash`.
+
+---
+
+## Variáveis Docker
+
+O `docker-compose.yml` define 4 services:
+
+| Service      | Container           | Porta        |
+|--------------|---------------------|--------------|
+| `app`        | `laravel-app`       | (interno)    |
+| `webserver`  | `laravel-webserver` | 8081:80      |
+| `db`         | `laravel-db`        | 3306:3306    |
+| `node`       | `laravel-node`      | 5173:5173    |
+
+Volumes nomeados para performance no Windows/WSL2:
+- `vendor_cache` → `/var/www/vendor` (PHP dependencies)
+- `node_modules_cache` → `/var/www/node_modules` (JS dependencies)
+- `mysql_data` → dados persistentes do MySQL

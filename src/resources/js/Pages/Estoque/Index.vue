@@ -2,18 +2,20 @@
     <AppLayout titulo="Ativos Tecnológicos">
     <Head title="Ativos Tecnológicos" />
 
-    <!-- Cabeçalho -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-      <div>
-        <h2 class="text-2xl font-bold text-gray-900">Gestão de Ativos Tecnológicos</h2>
-        <p class="text-sm text-gray-500 mt-0.5">Gerencie equipamentos e ativos operacionais da Defesa Civil</p>
+    <!-- Cabeçalho premium -->
+    <div class="rounded-2xl mb-6 overflow-hidden" style="background: linear-gradient(135deg, #1e3a5f 0%, #1d4ed8 60%, #312e81 100%)">
+      <div class="px-6 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-bold text-white">Gestão de Ativos Tecnológicos</h2>
+          <p class="text-sm text-blue-200 mt-0.5">Equipamentos, dispositivos e ativos digitais da operação de Defesa Civil</p>
+        </div>
+        <Botao :href="route('estoque.create')" class="!bg-white !text-blue-700 hover:!bg-blue-50 shrink-0">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          Adicionar Ativo
+        </Botao>
       </div>
-      <Botao :href="route('estoque.create')">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </svg>
-        Adicionar Ativo
-      </Botao>
     </div>
 
     <!-- Cards de Resumo com gradientes -->
@@ -40,7 +42,7 @@
           <span class="text-xs font-semibold text-amber-600 bg-amber-100 rounded-full px-2 py-0.5">alerta</span>
         </div>
         <p class="text-2xl font-bold text-gray-900">{{ resumo.estoque_baixo }}</p>
-        <p class="text-xs text-gray-500 mt-1">Estoque Baixo</p>
+        <p class="text-xs text-gray-500 mt-1">Estoque Crítico</p>
       </div>
       <div class="rounded-2xl p-5 shadow-sm" style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)">
         <div class="flex items-center justify-between mb-3">
@@ -52,13 +54,13 @@
           <span class="text-xs font-semibold text-gray-500 bg-gray-200 rounded-full px-2 py-0.5">inativo</span>
         </div>
         <p class="text-2xl font-bold text-gray-900">{{ resumo.inativos }}</p>
-        <p class="text-xs text-gray-500 mt-1">Inativos</p>
+        <p class="text-xs text-gray-500 mt-1">Inativos / Descartados</p>
       </div>
     </div>
 
     <!-- Filtros -->
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 mb-6">
-      <p class="text-sm font-semibold text-gray-700 mb-3">Filtrar ativos</p>
+      <p class="text-sm font-semibold text-gray-700 mb-3">Filtrar ativos e equipamentos</p>
       <form @submit.prevent="filtrar" class="flex flex-col sm:flex-row gap-3">
         <div class="relative flex-1">
           <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -84,7 +86,7 @@
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
       <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
         <div>
-          <h3 class="font-bold text-gray-900">Inventário de Ativos</h3>
+          <h3 class="font-bold text-gray-900">Inventário de Ativos Tecnológicos</h3>
           <p class="text-xs text-gray-400 mt-0.5">{{ produtos.total ?? 0 }} registros encontrados</p>
         </div>
       </div>

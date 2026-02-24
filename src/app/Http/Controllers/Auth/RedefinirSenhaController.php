@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\RedefinirSenhaRequest;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -23,18 +23,8 @@ class RedefinirSenhaController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(RedefinirSenhaRequest $request): RedirectResponse
     {
-        $request->validate([
-            'token'    => 'required',
-            'email'    => 'required|email',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ], [
-            'email.required'     => 'O e-mail é obrigatório.',
-            'password.required'  => 'A senha é obrigatória.',
-            'password.confirmed' => 'As senhas não conferem.',
-        ]);
-
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) use ($request) {

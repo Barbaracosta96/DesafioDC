@@ -246,14 +246,19 @@
               class="flex items-center gap-2.5 px-2 py-1.5 rounded-xl hover:bg-gray-100 transition-colors"
               @click="menuUsuario = !menuUsuario"
             >
-              <div class="w-9 h-9 rounded-full overflow-hidden ring-2 ring-indigo-100 shadow-sm shrink-0 bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+              <div class="w-9 h-9 rounded-full overflow-hidden ring-2 ring-indigo-200 shadow-sm shrink-0">
                 <img
-                  :src="avatarUrl"
-                  :alt="$page.props.auth.user?.name"
+                  src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=80&h=80&fit=crop&crop=face&q=80"
+                  alt="Operadora"
                   class="w-full h-full object-cover"
-                  @error="(e) => { e.target.style.display='none'; e.target.nextElementSibling.style.display='flex'; }"
+                  loading="eager"
+                  decoding="async"
+                  @error="$event.target.style.display='none'; $event.target.nextElementSibling.style.display='flex'"
                 />
-                <span class="text-white text-sm font-bold hidden w-full h-full items-center justify-center">{{ iniciais }}</span>
+                <span
+                  class="text-white text-sm font-bold w-full h-full items-center justify-center select-none bg-gradient-to-br from-indigo-500 to-purple-600"
+                  style="display:none"
+                >{{ iniciais }}</span>
               </div>
               <div class="hidden sm:block text-left">
                 <p class="text-sm font-semibold text-gray-800 leading-tight">{{ $page.props.auth.user?.name }}</p>
@@ -337,11 +342,6 @@ const notifRef = ref(null);
 const iniciais = computed(() => {
   const nome = page.props.auth?.user?.name ?? '';
   return nome.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase();
-});
-
-const avatarUrl = computed(() => {
-  const id = ((page.props.auth?.user?.id ?? 1) % 49) + 1;
-  return `https://randomuser.me/api/portraits/women/${id}.jpg`;
 });
 
 const isAtivo = (rota) => {

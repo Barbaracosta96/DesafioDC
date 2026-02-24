@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUsuarioRequest;
+use App\Http\Requests\UpdateUsuarioRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Role;
@@ -52,20 +53,8 @@ class UsuariosController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreUsuarioRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role'     => 'required|string|exists:roles,name',
-        ], [
-            'name.required'  => 'O nome é obrigatório.',
-            'email.required' => 'O e-mail é obrigatório.',
-            'email.unique'   => 'Este e-mail já está em uso.',
-            'role.required'  => 'Selecione um perfil.',
-        ]);
-
         $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
@@ -114,16 +103,8 @@ class UsuariosController extends Controller
         ]);
     }
 
-    public function update(Request $request, User $usuario): RedirectResponse
+    public function update(UpdateUsuarioRequest $request, User $usuario): RedirectResponse
     {
-        $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email,' . $usuario->id,
-            'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
-            'role'     => 'required|string|exists:roles,name',
-            'ativo'    => 'boolean',
-        ]);
-
         $dados = [
             'name'  => $request->name,
             'email' => $request->email,

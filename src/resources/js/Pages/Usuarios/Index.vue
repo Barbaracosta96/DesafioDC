@@ -2,17 +2,72 @@
   <AppLayout titulo="Usuários">
     <Head title="Usuários" />
 
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-      <div>
-        <h2 class="text-2xl font-bold text-gray-900">Gestão de Usuários</h2>
-        <p class="text-sm text-gray-500 mt-0.5">Gerencie os acessos da plataforma</p>
+    <!-- Cabeçalho premium -->
+    <div class="rounded-2xl mb-6 overflow-hidden" style="background: linear-gradient(135deg, #312e81 0%, #4f46e5 55%, #6d28d9 100%)">
+      <div class="px-6 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-bold text-white">Controle de Acessos</h2>
+          <p class="text-sm text-indigo-200 mt-0.5">Gerencie os operadores e perfis de acesso ao sistema</p>
+        </div>
+        <Botao :href="route('usuarios.create')" class="!bg-white !text-indigo-700 hover:!bg-indigo-50 shrink-0">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Novo Operador
+        </Botao>
       </div>
-      <Botao :href="route('usuarios.create')">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </svg>
-        Novo Usuário
-      </Botao>
+    </div>
+
+    <!-- Cards de Resumo -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div class="rounded-2xl p-5 shadow-sm" style="background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%)">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center shadow">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+          </div>
+          <span class="text-xs font-semibold text-indigo-600 bg-indigo-100 rounded-full px-2 py-0.5">total</span>
+        </div>
+        <p class="text-2xl font-bold text-gray-900">{{ usuarios.total ?? 0 }}</p>
+        <p class="text-xs text-gray-500 mt-1">Operadores Cadastrados</p>
+      </div>
+      <div class="rounded-2xl p-5 shadow-sm" style="background: linear-gradient(135deg, #faf5ff 0%, #ede9fe 100%)">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-violet-500 flex items-center justify-center shadow">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </div>
+          <span class="text-xs font-semibold text-violet-600 bg-violet-100 rounded-full px-2 py-0.5">admin</span>
+        </div>
+        <p class="text-2xl font-bold text-gray-900">{{ roleCount('admin') }}</p>
+        <p class="text-xs text-gray-500 mt-1">Administradores</p>
+      </div>
+      <div class="rounded-2xl p-5 shadow-sm" style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center shadow">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            </svg>
+          </div>
+          <span class="text-xs font-semibold text-blue-600 bg-blue-100 rounded-full px-2 py-0.5">editor</span>
+        </div>
+        <p class="text-2xl font-bold text-gray-900">{{ roleCount('editor') }}</p>
+        <p class="text-xs text-gray-500 mt-1">Editores</p>
+      </div>
+      <div class="rounded-2xl p-5 shadow-sm" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shadow">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
+          </div>
+          <span class="text-xs font-semibold text-emerald-600 bg-emerald-100 rounded-full px-2 py-0.5">usuário</span>
+        </div>
+        <p class="text-2xl font-bold text-gray-900">{{ roleCount('usuario') }}</p>
+        <p class="text-xs text-gray-500 mt-1">Operadores Padrão</p>
+      </div>
     </div>
 
     <!-- Filtros -->
@@ -147,6 +202,7 @@ const excluir = () => {
 
 const iniciais   = (nome) => nome.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase();
 const badgeRole  = (r) => ({ admin: 'roxo', editor: 'azul', usuario: 'cinza' }[r] ?? 'cinza');
+const roleCount  = (role) => props.usuarios?.data?.filter(u => u.roles?.includes(role)).length ?? 0;
 const userColor  = (nome) => {
   const cores = [
     '#6366f1, #8b5cf6', '#ec4899, #f43f5e', '#10b981, #059669',

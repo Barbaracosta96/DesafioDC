@@ -1,34 +1,37 @@
 <template>
-  <AppLayout titulo="Clientes">
-    <Head title="Clientes" />
+  <AppLayout titulo="Entidades">
+    <Head title="Entidades" />
 
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-      <div>
-        <h2 class="text-2xl font-bold text-gray-900">Clientes</h2>
-        <p class="text-sm text-gray-500 mt-0.5">Gerencie sua base de clientes</p>
+    <!-- Cabeçalho premium -->
+    <div class="rounded-2xl mb-6 overflow-hidden" style="background: linear-gradient(135deg, #312e81 0%, #4f46e5 60%, #6d28d9 100%)">
+      <div class="px-6 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-bold text-white">Entidades Atendidas</h2>
+          <p class="text-sm text-indigo-200 mt-0.5">Municípios, órgãos públicos e instituições parceiras da Defesa Civil</p>
+        </div>
+        <Botao :href="route('clientes.create')" class="!bg-white !text-indigo-700 hover:!bg-indigo-50 shrink-0">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          Nova Entidade
+        </Botao>
       </div>
-      <Botao :href="route('clientes.create')">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </svg>
-        Novo Cliente
-      </Botao>
     </div>
 
     <!-- Filtros -->
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 mb-6">
-      <p class="text-sm font-semibold text-gray-700 mb-3">Filtrar clientes</p>
+      <p class="text-sm font-semibold text-gray-700 mb-3">Filtrar entidades</p>
       <form @submit.prevent="filtrar" class="flex flex-wrap gap-3">
         <div class="relative flex-1 min-w-48">
           <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
           </svg>
-          <input v-model="filtroForm.busca" type="search" placeholder="Buscar por nome, e-mail ou CPF/CNPJ..." class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-gray-50" />
+          <input v-model="filtroForm.busca" type="search" placeholder="Buscar por nome, e-mail ou CNPJ..." class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-gray-50"/>
         </div>
         <select v-model="filtroForm.tipo" class="px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-gray-50">
           <option value="">Todos tipos</option>
-          <option value="pessoa_fisica">Pessoa Física</option>
-          <option value="pessoa_juridica">Pessoa Jurídica</option>
+          <option value="pessoa_fisica">Órgão Público</option>
+          <option value="pessoa_juridica">Empresa / Inst. Parceira</option>
         </select>
         <Botao type="submit" size="md">Filtrar</Botao>
         <Botao variant="secundario" size="md" type="button" @click="limparFiltros">Limpar</Botao>
@@ -46,7 +49,7 @@
           </div>
         </div>
         <p class="text-2xl font-bold text-gray-900">{{ resumo.total }}</p>
-        <p class="text-xs text-gray-500 mt-1">Total de Clientes</p>
+        <p class="text-xs text-gray-500 mt-1">Total de Entidades</p>
       </div>
       <div class="rounded-2xl p-5 shadow-sm" style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)">
         <div class="flex items-center justify-between mb-3">
@@ -57,7 +60,7 @@
           </div>
         </div>
         <p class="text-2xl font-bold text-gray-900">{{ resumo.pf }}</p>
-        <p class="text-xs text-gray-500 mt-1">Pessoa Física</p>
+        <p class="text-xs text-gray-500 mt-1">Órgãos Públicos</p>
       </div>
       <div class="rounded-2xl p-5 shadow-sm" style="background: linear-gradient(135deg, #faf5ff 0%, #ede9fe 100%)">
         <div class="flex items-center justify-between mb-3">
@@ -68,7 +71,7 @@
           </div>
         </div>
         <p class="text-2xl font-bold text-gray-900">{{ resumo.pj }}</p>
-        <p class="text-xs text-gray-500 mt-1">Pessoa Jurídica</p>
+        <p class="text-xs text-gray-500 mt-1">Empresas Parceiras</p>
       </div>
       <div class="rounded-2xl p-5 shadow-sm" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)">
         <div class="flex items-center justify-between mb-3">
@@ -79,7 +82,7 @@
           </div>
         </div>
         <p class="text-2xl font-bold text-gray-900">{{ resumo.com_compras }}</p>
-        <p class="text-xs text-gray-500 mt-1">Com Compras</p>
+        <p class="text-xs text-gray-500 mt-1">Com Ordens</p>
       </div>
     </div>
 
@@ -87,7 +90,7 @@
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
       <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
         <div>
-          <h3 class="font-bold text-gray-900">Lista de Clientes</h3>
+          <h3 class="font-bold text-gray-900">Registro de Entidades</h3>
           <p class="text-xs text-gray-400 mt-0.5">{{ clientes.total ?? 0 }} registros encontrados</p>
         </div>
       </div>
@@ -95,10 +98,10 @@
       <table class="w-full">
         <thead>
           <tr class="bg-gray-50">
-            <th class="text-left text-xs font-semibold text-gray-500 px-6 py-3.5 uppercase tracking-wide">Cliente</th>
-            <th class="text-left text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide hidden md:table-cell">CPF/CNPJ</th>
+            <th class="text-left text-xs font-semibold text-gray-500 px-6 py-3.5 uppercase tracking-wide">Entidade</th>
+            <th class="text-left text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide hidden md:table-cell">CNPJ / CPF</th>
             <th class="text-center text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide">Tipo</th>
-            <th class="text-center text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide hidden sm:table-cell">Compras</th>
+            <th class="text-center text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide hidden sm:table-cell">Ordens</th>
             <th class="text-left text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide hidden lg:table-cell">Cidade / UF</th>
             <th class="text-center text-xs font-semibold text-gray-500 px-4 py-3.5 uppercase tracking-wide">Ações</th>
           </tr>
@@ -120,7 +123,7 @@
               <span class="font-mono text-xs bg-gray-100 px-2 py-0.5 rounded">{{ cliente.cpf_cnpj || '—' }}</span>
             </td>
             <td class="px-4 py-4 text-center">
-              <Badge :variant="cliente.tipo === 'pessoa_fisica' ? 'azul' : 'roxo'">{{ cliente.tipo === 'pessoa_fisica' ? 'PF' : 'PJ' }}</Badge>
+              <Badge :variant="cliente.tipo === 'pessoa_fisica' ? 'azul' : 'roxo'">{{ cliente.tipo === 'pessoa_fisica' ? 'Órgão Público' : 'Parceiro' }}</Badge>
             </td>
             <td class="px-4 py-4 text-center hidden sm:table-cell">
               <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">{{ cliente.vendas_count }}</span>
@@ -161,7 +164,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
-                <p class="text-sm font-medium text-gray-400">Nenhum cliente encontrado</p>
+                <p class="text-sm font-medium text-gray-400">Nenhuma entidade encontrada</p>
               </div>
             </td>
           </tr>
@@ -172,11 +175,11 @@
     </div>
 
     <!-- Modal exclusão -->
-    <Modal :aberto="!!clienteExcluir" titulo="Excluir Cliente" @fechar="clienteExcluir = null">
+    <Modal :aberto="!!clienteExcluir" titulo="Excluir Entidade" @fechar="clienteExcluir = null">
       <p class="text-sm text-gray-600">
-        Tem certeza que deseja excluir o cliente <strong>{{ clienteExcluir?.nome }}</strong>?
+        Tem certeza que deseja excluir a entidade <strong>{{ clienteExcluir?.nome }}</strong>?
         <span v-if="clienteExcluir?.vendas_count > 0" class="block mt-2 text-amber-600">
-          Atenção: este cliente possui {{ clienteExcluir.vendas_count }} venda(s) registrada(s).
+          Atenção: esta entidade possui {{ clienteExcluir.vendas_count }} ordem(ns) registrada(s).
         </span>
       </p>
       <template #footer>

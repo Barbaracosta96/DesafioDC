@@ -2,28 +2,30 @@
     <AppLayout titulo="Ordens de Fornecimento">
     <Head title="Ordens de Fornecimento" />
 
-    <!-- Cabeçalho -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-      <div>
-        <h2 class="text-2xl font-bold text-gray-900">Ordens de Fornecimento</h2>
-        <p class="text-sm text-gray-500 mt-0.5">Gerencie aquisições e ordens de tecnologia operacional</p>
-      </div>
-      <div class="flex items-center gap-2">
-        <a
-          :href="route('vendas.exportar')"
-          class="flex items-center gap-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-xl px-4 py-2.5 hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-600 transition-all shadow-sm bg-white"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-          </svg>
-          Exportar CSV
-        </a>
-        <Botao :href="route('vendas.create')">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
-          Nova Ordem
-        </Botao>
+    <!-- Cabeçalho premium -->
+    <div class="rounded-2xl mb-6 overflow-hidden" style="background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 55%, #312e81 100%)">
+      <div class="px-6 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-bold text-white">Ordens de Fornecimento</h2>
+          <p class="text-sm text-blue-300 mt-0.5">Aquisições, licitações e ordens operacionais da Defesa Civil</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <a
+            :href="route('vendas.exportar')"
+            class="flex items-center gap-2 text-sm font-medium text-white/70 border border-white/25 rounded-xl px-4 py-2 hover:bg-white/10 transition-all"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Exportar CSV
+          </a>
+          <Botao :href="route('vendas.create')" class="!bg-white !text-slate-800 hover:!bg-slate-100 shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Nova Ordem
+          </Botao>
+        </div>
       </div>
     </div>
 
