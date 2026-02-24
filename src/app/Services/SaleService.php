@@ -47,18 +47,17 @@ class SaleService
                 'notes'       => $data['notes'] ?? null,
             ]);
 
+            // Loop items again to create records and update stock
             foreach ($data['items'] as $item) {
-                $product = Product::lockForUpdate()->find($item['product_id']);
+                $product = Product::find($item['product_id']);
 
-                SaleItem::create([
-                    'sale_id'     => $sale->id,
-                    'product_id'  => $product->id,
-                    'quantity'    => $item['quantity'],
-                    'unit_price'  => $product->sale_price,
-                    'total_price' => $product->sale_price * $item['quantity'],
+                $sale->items()->create([
+                    'product_id'     => $product->id,
+                    'quantity'       => $item['quantity'],
+                    'unit_price'     => $product->sale_price,
+                    'total_price'    => $product->sale_price * $item['quantity'],
                 ]);
 
-                // Decrement stock
                 $product->decrement('stock_quantity', $item['quantity']);
             }
 
