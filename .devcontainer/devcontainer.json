@@ -1,0 +1,31 @@
+{
+	"name": "DabangSaaS Dev Container",
+	"dockerComposeFile": [
+		"../docker-compose.yml"
+	],
+	"service": "app",
+	"workspaceFolder": "/var/www/html",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"mansoorkhan005.vscode-php-intelephense-client",
+				"bmewburn.vscode-intelephense-client",
+				"amiralizadeh9480.laravel-extra-intellisense",
+				"onecentlin.laravel-blade",
+				"vue.volar",
+				"dbaeumer.vscode-eslint",
+                "mikestead.dotenv"
+			]
+		}
+	},
+	"remoteUser": "www-data",
+	"features": {
+		"ghcr.io/devcontainers/features/node:1": {},
+		"ghcr.io/devcontainers/features/git:1": {},
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installZsh": true,
+            "configureZshAsDefaultShell": true
+        }
+	},
+    "postCreateCommand": "composer install && php artisan key:generate && php artisan migrate --force && php artisan db:seed --force && npm install"
+}

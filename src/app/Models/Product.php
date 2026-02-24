@@ -6,7 +6,26 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Category;
+use App\Models\SaleItem;
 
+/**
+ * @property int $id
+ * @property int $category_id
+ * @property string $name
+ * @property string $sku
+ * @property string|null $description
+ * @property float $purchase_price
+ * @property float $sale_price
+ * @property int $stock_quantity
+ * @property int $min_stock
+ * @property string|null $image_path
+ * @property string $status
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Category $category
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SaleItem[] $saleItems
+ */
 class Product extends Model
 {
     use HasFactory;

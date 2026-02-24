@@ -42,10 +42,17 @@ class CustomerController extends Controller
 
     public function show(Customer $customer): Response
     {
+        $totalSpent     = (float) $customer->sales()->where('status', 'completed')->sum('total');
+        $totalSalesCount = $customer->sales()->count();
+        $completedCount  = $customer->sales()->where('status', 'completed')->count();
+
         $customer->load(['sales' => fn ($q) => $q->latest()->take(10)->with('user')]);
 
         return Inertia::render('Customers/Show', [
-            'customer' => $customer,
+            'customer'        => $customer,
+            'totalSpent'      => $totalSpent,
+            'totalSalesCount' => $totalSalesCount,
+            'avgTicket'       => $completedCount > 0 ? round($totalSpent / $completedCount, 2) : 0,
         ]);
     }
 

@@ -61,7 +61,7 @@
             </td>
             <td class="px-5 py-3.5 text-center text-gray-600">{{ customer.sales_count }}</td>
             <td class="px-5 py-3.5 text-right font-semibold text-gray-800">
-              {{ formatCurrency(customer.sales_sum_total) }}
+              {{ formatCurrency(customer.total_purchased) }}
             </td>
             <td class="px-5 py-3.5">
               <div class="flex items-center justify-end gap-1">

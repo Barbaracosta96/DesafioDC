@@ -109,7 +109,7 @@
 
           <!-- Change status -->
           <div
-            v-if="$page.props.auth.user?.permissions?.includes('manage sales') && sale.status !== 'cancelled'"
+            v-if="$page.props.auth.user?.permissions?.includes('cancel sales') && sale.status !== 'cancelled'"
             class="bg-white rounded-2xl p-5 shadow-sm border border-gray-50"
           >
             <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Atualizar Status</h3>
@@ -190,6 +190,6 @@ function formatDate(date) {
 function updateStatus(status) {
   confirmCancel.value = false;
   statusForm.status = status;
-  statusForm.patch(route('sales.status', props.sale.id));
+  statusForm.patch(route('sales.update-status', props.sale.id));
 }
 </script>

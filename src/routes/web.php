@@ -10,6 +10,8 @@ use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
+use App\Models\User;
+
 // Guest routes
 Route::middleware('guest')->group(function () {
     Route::get('/login',    [AuthController::class, 'showLogin'])->name('login');
@@ -42,6 +44,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('customers', CustomerController::class);
 
     // Users (admin only)
-    Route::resource('users', UserController::class)->except(['show']);
+    Route::resource('users', UserController::class)
+        ->except(['show'])
+        ->middleware('role:admin');
 });
 

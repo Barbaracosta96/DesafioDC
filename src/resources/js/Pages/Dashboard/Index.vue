@@ -191,6 +191,41 @@
       </div>
     </div>
 
+    <!-- Map and Volume row -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4 mb-6">
+      <!-- Sales Mapping by Country -->
+      <div class="lg:col-span-2 bg-white rounded-2xl p-5 shadow-sm border border-gray-50 flex flex-col">
+        <h3 class="font-bold text-gray-800 mb-4">Vendas por País</h3>
+        <div class="flex-1 bg-gray-50 rounded-xl flex items-center justify-center relative overflow-hidden min-h-[250px]">
+           <!-- Simple SVG World Map Placeholder -->
+           <svg class="w-full h-full text-gray-200" viewBox="0 0 100 50" preserveAspectRatio="none">
+             <path d="M10,10 Q20,5 30,10 T50,15 T70,10 T90,15 V35 Q80,40 70,35 T50,30 T30,35 T10,30 Z" fill="currentColor" />
+           </svg>
+           <div class="absolute inset-0 flex items-center justify-center">
+             <p class="text-gray-400 text-sm">Mapa Interativo (Simulado)</p>
+           </div>
+           <!-- Floating bubbles for countries -->
+           <div class="absolute top-1/4 left-1/4 w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center animate-pulse">
+             <div class="w-3 h-3 bg-violet-500 rounded-full"></div>
+           </div>
+           <div class="absolute top-1/3 right-1/3 w-6 h-6 bg-green-500/20 rounded-full flex items-center justify-center animate-pulse animation-delay-500">
+             <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+           </div>
+        </div>
+      </div>
+
+      <!-- Volume vs Service Level -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-50">
+        <h3 class="font-bold text-gray-800 mb-1">Volume vs Nível de Serviço</h3>
+        <apexchart
+          type="bar"
+          height="250"
+          :options="volumeChartOptions"
+          :series="volumeChartSeries"
+        />
+      </div>
+    </div>
+
     <!-- Recent sales table -->
     <div class="mt-4 bg-white rounded-2xl shadow-sm border border-gray-50 overflow-hidden">
       <div class="flex items-center justify-between p-5 border-b border-gray-50">
@@ -420,4 +455,21 @@ const targetChartSeries = computed(() => [
   { name: 'Realidade', data: Object.values(props.revenuePerMonth).slice(0, 7).map(Number) },
   { name: 'Meta',      data: Object.values(props.revenuePerMonth).slice(0, 7).map(v => Number(v) * 1.3) },
 ]);
+
+// Volume vs Service Level Chart
+const volumeChartOptions = {
+  chart: { type: 'bar', stacked: true, toolbar: { show: false }, fontFamily: 'Inter' },
+  plotOptions: { bar: { borderRadius: 4, columnWidth: '30%' } },
+  colors: ['#7C3AED', '#E5E7EB'],
+  dataLabels: { enabled: false },
+  xaxis: { categories: ['Jan','Fev','Mar','Abr','Mai','Jun'], axisBorder: { show: false }, axisTicks: { show: false }, labels: { style: { fontSize: '10px' } } },
+  yaxis: { show: false },
+  grid: { show: false },
+  legend: { show: true, position: 'bottom', markers: { radius: 12 } },
+};
+
+const volumeChartSeries = [
+  { name: 'Volume', data: [110, 120, 130, 100, 90, 150] },
+  { name: 'Serviço', data: [50, 40, 30, 60, 70, 10] },
+];
 </script>

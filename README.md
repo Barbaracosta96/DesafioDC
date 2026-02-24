@@ -15,6 +15,16 @@ Sistema de gestão de vendas com painel administrativo, controle de estoque, CRM
 
 ## Início Rápido
 
+### Opção 1: GitHub Codespaces (Recomendado - Sem instalação local)
+Esta é a maneira mais fácil e leve de rodar o projeto, pois utiliza uma máquina virtual na nuvem e não consome recursos do seu computador.
+
+1. No repositório do GitHub, clique no botão verde **<> Code**.
+2. Selecione a aba **Codespaces**.
+3. Clique em **Create codespace on main** (ou na branch atual).
+4. O ambiente será configurado automaticamente (instalação de dependências, banco de dados e migrações).
+5. Aguarde o VS Code abrir no navegador e o terminal finalizar a configuração.
+
+### Opção 2: Rodando Localmente (Docker Desktop)
 ### Pré-requisitos
 - Docker e Docker Compose instalados
 
@@ -156,4 +166,4 @@ docker compose logs -f php
 
 ---
 
-Desenvolvido por Matheus Estrela
+Desenvolvido por Barbara Costa

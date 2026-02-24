@@ -93,6 +93,7 @@ class DemoDataSeeder extends Seeder
                 $qty      = rand(1, 3);
                 $total    = $product->sale_price * $qty;
 
+                $saleDate = $monthStart->copy()->addDays(rand(0, 25));
                 $sale = Sale::create([
                     'user_id'     => $admin->id,
                     'customer_id' => $customer->id,
@@ -100,8 +101,11 @@ class DemoDataSeeder extends Seeder
                     'subtotal'    => $total,
                     'discount'    => 0,
                     'total'       => $total,
-                    'created_at'  => $monthStart->copy()->addDays(rand(0, 25)),
                 ]);
+                $sale->timestamps = false;
+                $sale->created_at = $saleDate;
+                $sale->updated_at = $saleDate;
+                $sale->saveQuietly();
 
                 SaleItem::create([
                     'sale_id'     => $sale->id,

@@ -58,15 +58,15 @@
             <div class="space-y-3">
               <div class="flex items-center justify-between">
                 <span class="text-sm text-gray-500">Total de vendas</span>
-                <span class="text-sm font-semibold text-gray-700">{{ customer.sales?.length || 0 }}</span>
+                <span class="text-sm font-semibold text-gray-700">{{ totalSalesCount }}</span>
               </div>
               <div class="flex items-center justify-between">
                 <span class="text-sm text-gray-500">Total gasto</span>
-                <span class="text-sm font-bold text-violet-700">{{ formatCurrency(totalSpent) }}</span>
+                <span class="text-sm font-bold text-violet-700">{{ formatCurrency(props.totalSpent) }}</span>
               </div>
               <div class="flex items-center justify-between">
                 <span class="text-sm text-gray-500">Ticket médio</span>
-                <span class="text-sm font-semibold text-gray-700">{{ formatCurrency(avgTicket) }}</span>
+                <span class="text-sm font-semibold text-gray-700">{{ formatCurrency(props.avgTicket) }}</span>
               </div>
             </div>
           </div>
@@ -126,7 +126,6 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
 import AppLayout from '@/Pages/Layouts/AppLayout.vue';
 import {
@@ -135,19 +134,13 @@ import {
 } from '@heroicons/vue/24/outline';
 
 const props = defineProps({
-  customer: { type: Object, required: true },
+  customer:        { type: Object, required: true },
+  totalSpent:      { type: Number, default: 0 },
+  totalSalesCount: { type: Number, default: 0 },
+  avgTicket:       { type: Number, default: 0 },
 });
 
 const statusLabel = { completed: 'Concluída', pending: 'Pendente', cancelled: 'Cancelada' };
-
-const totalSpent = computed(() =>
-  (props.customer.sales || []).filter(s => s.status === 'completed').reduce((a, s) => a + parseFloat(s.total || 0), 0)
-);
-
-const avgTicket = computed(() => {
-  const completed = (props.customer.sales || []).filter(s => s.status === 'completed');
-  return completed.length ? totalSpent.value / completed.length : 0;
-});
 
 function formatCurrency(v) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);

@@ -18,11 +18,13 @@
       <!-- Nav -->
       <nav class="flex-1 py-4 overflow-y-auto">
         <ul class="space-y-0.5 px-3">
-          <li v-for="item in navItems" :key="item.route">
+          <li v-for="item in navItems" :key="item.label">
             <Link
-              :href="route(item.route)"
-              class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150"
-              :class="isActive(item.route)
+              :href="item.route === '#' ? '#' : route(item.route)"
+              :method="item.method || 'get'"
+              as="button"
+              class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 w-full text-left"
+              :class="isActive(item)
                 ? 'bg-violet-600 text-white shadow-sm shadow-violet-200'
                 : 'text-gray-500 hover:bg-violet-50 hover:text-violet-700'"
             >
@@ -196,6 +198,7 @@ import {
   ShoppingCartIcon,
   CubeIcon,
   ChartBarIcon,
+  ChartPieIcon,
   ChatBubbleLeftRightIcon,
   Cog6ToothIcon,
   ArrowRightOnRectangleIcon,
@@ -227,15 +230,19 @@ const userInitial = computed(() => {
 });
 
 const navItems = [
-  { route: 'dashboard',        label: 'Dashboard',     icon: HomeIcon },
-  { route: 'sales.index',      label: 'Vendas',         icon: ShoppingCartIcon },
-  { route: 'products.index',   label: 'Produtos',       icon: CubeIcon },
-  { route: 'customers.index',  label: 'Clientes',       icon: UsersIcon },
-  { route: 'sales.index',      label: 'Relatórios',     icon: ChartBarIcon },
+  { route: 'dashboard',      label: 'Dashboard',     icon: HomeIcon },
+  { route: '#',              label: 'Leaderboard',   icon: ChartBarIcon },
+  { route: 'sales.index',    label: 'Order',         icon: ShoppingCartIcon },
+  { route: 'products.index', label: 'Products',      icon: CubeIcon },
+  { route: 'sales.index',    label: 'Sales Report',  icon: ChartPieIcon }, // Using ChartPieIcon (need to import) or ChartBarIcon
+  { route: '#',              label: 'Messages',      icon: ChatBubbleLeftRightIcon },
+  { route: '#',              label: 'Settings',      icon: Cog6ToothIcon },
+  { route: 'logout',         label: 'Sign Out',      icon: ArrowRightOnRectangleIcon, method: 'post' },
 ];
 
-function isActive(routeName) {
-  return route().current(routeName) || route().current(routeName + '.*');
+function isActive(item) {
+  if (item.route === '#') return false;
+  return route().current(item.route) || route().current(item.route + '.*');
 }
 
 function handleClickOutside(e) {
