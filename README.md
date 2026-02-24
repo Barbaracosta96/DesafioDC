@@ -111,18 +111,92 @@ docker compose exec node npm run build
 
 ---
 
-## Estrutura de Banco de Dados
+## Estrutura de Banco de Dados (ER Diagram)
+Diagrama Entidade-Relacionamento do sistema:
 
-```
-users
-  ├── roles (Spatie)
-  └── sales → sale_items → products
-                             └── categories
-customers
-  └── sales
+```mermaid
+erDiagram
+    USERS ||--o{ SALES : "processa"
+    CUSTOMERS ||--o{ SALES : "realiza"
+    SALES ||--|{ SALE_ITEMS : "contem"
+    PRODUCTS ||--o{ SALE_ITEMS : "incluido_em"
+    CATEGORIES ||--o{ PRODUCTS : "possui"
+
+    USERS {
+        bigint id PK
+        string name
+        string email
+        string password
+        string role "admin|editor|user"
+    }
+
+    CUSTOMERS {
+        bigint id PK
+        string name
+        string email
+        string phone
+    }
+
+    PRODUCTS {
+        bigint id PK
+        string sku
+        string name
+        decimal sale_price
+        integer stock_quantity
+        string status "active|inactive"
+    }
+
+    SALES {
+        bigint id PK
+        bigint user_id FK
+        bigint customer_id FK
+        decimal total
+        string status "pending|completed|cancelled"
+        datetime created_at
+    }
+
+    SALE_ITEMS {
+        bigint id PK
+        bigint sale_id FK
+        bigint product_id FK
+        integer quantity
+        decimal unit_price
+        decimal total_price
+    }
 ```
 
----
+## Fluxo de Processo (Sales Workflow)
+Fluxo simplificado de uma venda no sistema:
+
+```mermaid
+graph TD
+    A[Início] --> B{Usuário Autenticado?}
+    B -- Não --> C[Tela de Login]
+    B -- Sim --> D[Dashboard]
+    D --> E[Novo Pedido / Venda]
+    E --> F[Selecionar Cliente]
+    F --> G[Adicionar Produtos]
+    G --> H{Estoque Suficiente?}
+    H -- Não --> I[Alerta de Estoque]
+    I --> G
+    H -- Sim --> J[Confirmar Venda]
+    J --> K[Atualizar Estoque]
+    K --> L[Gerar Relatório]
+    L --> M[Fim]
+```
+
+## Testes Automatizados
+
+O projeto inclui testes automatizados cobrindo as principais funcionalidades (CRUD de Produtos, ACL).
+
+Para rodar os testes:
+```bash
+# Rodar todos os testes
+php artisan test
+
+# Rodar apenas testes de Feature
+php artisan test --testsuite=Feature
+```
 
 ## Arquitetura
 
