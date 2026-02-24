@@ -1,49 +1,159 @@
-# 🚀 Projeto NewSDC - Gestão CEDEC
+# DabangSaaS — Desafio Técnico Full Stack
 
-Este projeto faz parte da iniciativa de modernização e renovação do ecossistema da **Defesa Civil (CEDEC-MG)**. Desenvolvido com uma arquitetura moderna em **PHP 8.4** e **Laravel**, focado em descentralização, performance e escalabilidade. 🛠️
+Sistema de gestão de vendas com painel administrativo, controle de estoque, CRM básico e ACL por papéis.
+
+## Tecnologias
+
+| Camada | Stack |
+|---|---|
+| Backend | PHP 8.3 · Laravel 12 · Inertia.js (server) |
+| Frontend | Vue 3 · Inertia.js (client) · Tailwind CSS v4 |
+| Banco de dados | MySQL 8.0 |
+| Auth / ACL | Laravel Auth + Spatie Laravel Permission |
+| Gráficos | ApexCharts |
+| Infra | Docker · Nginx · Vite (HMR) |
+
+## Início Rápido
+
+### Pré-requisitos
+- Docker e Docker Compose instalados
+
+### Subindo o ambiente
+
+```bash
+docker compose up -d --build
+```
+
+O primeiro boot executa automaticamente:
+1. `composer install`
+2. `php artisan key:generate`
+3. `php artisan migrate --force`
+4. `php artisan db:seed --force` (apenas na primeira vez)
+5. `php artisan storage:link`
+
+A aplicação estará disponível em **http://localhost:8081**
+
+### Assets do frontend
+
+Em desenvolvimento (com HMR):
+```bash
+docker compose exec node npm run dev
+```
+
+Para build de produção:
+```bash
+docker compose exec node npm run build
+```
 
 ---
 
-## 💻 Como Executar (Git Bash)
+## Contas de Demo
 
-Para rodar o ambiente localmente utilizando o terminal integrado, siga os passos abaixo:
-
-1. **Abra o seu terminal** (Git Bash recomendado).
-2. **Navegue até a pasta de infraestrutura**:
-   ```bash
-   cd docker/
-   ```
-
-# 🛠️ Orquestração com Justfile
-
-Para facilitar o fluxo de trabalho e evitar comandos extensos de Docker, utilizamos o Justfile. Ele funciona como um orquestrador de tarefas simplificado. 🎯
-
-> [!IMPORTANT]
-> **Pré-requisito**: É necessário ter o interpretador binário do `just` instalado e configurado no seu PATH.
-
-## 📜 Comandos Disponíveis
-
-Execute os comandos abaixo diretamente no diretório raiz:
-
-| Comando | Descrição |
-| :--- | :--- |
-| `just list` | ✨ Lista todos os comandos configurados no projeto. |
-| `just build` | 🏗️ Realiza o build das imagens e sobe os containers do Docker. |
-| `just shell app` | 🐚 Abre o terminal interativo dentro do container da aplicação (Laravel). |
-| `just rebuild` | 🔄 Remove os volumes, reconstrói as imagens e sobe o ambiente do zero. |
-
-## 🐳 Ambiente Docker
-
-Toda a configuração de infraestrutura (Nginx, MySQL, PHP-FPM) está centralizada na pasta do docker.
-
-- **Stack**: PHP 8.4, Docker, Jenkins (CI/CD) e MySQL.
-- **Frontend**: Vue.js com Inertia.js.
-
-## 📋 Requisitos e Notas
-
-- Certifique-se de que a porta **80** (ou a configurada no `.env`) esteja livre.
-- As assinaturas digitais e documentos formais do projeto seguem o padrão da PUC Universidade.
+| E-mail | Senha | Papel |
+|---|---|---|
+| admin@dabang.app | password | Admin |
+| editor@dabang.app | password | Editor |
+| user@dabang.app | password | User |
 
 ---
 
-✨ **Desenvolvido por Matheus Estrela** - Foco em produtividade e alta performance.
+## Módulos
+
+### Dashboard
+- Cards de resumo: total de vendas, receita, produtos ativos, clientes cadastrados
+- Gráfico de receita mensal (barras)
+- Gráfico de desempenho (linha)
+- Top 5 produtos mais vendidos
+- Tabela de vendas recentes
+- Alerta de estoque crítico
+
+### Estoque (Produtos)
+- CRUD completo com upload de imagem
+- Calculadora de margem em tempo real
+- Filtros por categoria, status e busca textual
+- Alertas de estoque mínimo
+
+### Vendas
+- Registro de vendas com múltiplos itens
+- Desconto por venda
+- Controle de status: Pendente / Concluída / Cancelada
+- Reversão automática de estoque ao cancelar
+
+### Clientes
+- Cadastro completo (endereço, documento, contato)
+- Histórico de compras e métricas (ticket médio, total gasto)
+
+### Usuários _(admin only)_
+- CRUD de usuários com atribuição de papel (Admin / Editor / User)
+
+---
+
+## ACL — Papéis e Permissões
+
+| Permissão | Admin | Editor | User |
+|---|:---:|:---:|:---:|
+| view dashboard | ✓ | ✓ | ✓ |
+| view/create/edit/delete products | ✓ | ✓ | — |
+| view/create sales | ✓ | ✓ | ✓ |
+| manage sales (cancel/complete) | ✓ | ✓ | — |
+| view/create/edit/delete customers | ✓ | ✓ | — |
+| manage users | ✓ | — | — |
+
+---
+
+## Estrutura de Banco de Dados
+
+```
+users
+  ├── roles (Spatie)
+  └── sales → sale_items → products
+                             └── categories
+customers
+  └── sales
+```
+
+---
+
+## Arquitetura
+
+```
+app/
+  Http/
+    Controllers/       # thin controllers — delegam para Services
+    Middleware/        # HandleInertiaRequests (props globais)
+    Requests/          # Form Requests (validação)
+  Models/              # Eloquent + relacionamentos
+  Services/            # lógica de negócio (SaleService, ProductService)
+resources/
+  js/
+    Pages/             # Vue pages (SSR-ready via Inertia)
+      Auth/
+      Dashboard/
+      Products/
+      Sales/
+      Users/
+      Customers/
+      Layouts/
+```
+
+---
+
+## Comandos Úteis
+
+```bash
+# Acesso ao container PHP
+docker compose exec php sh
+
+# Limpar cache
+php artisan cache:clear && php artisan config:clear && php artisan view:clear
+
+# Re-seed
+php artisan db:seed --class=DemoDataSeeder
+
+# Logs em tempo real
+docker compose logs -f php
+```
+
+---
+
+Desenvolvido por Matheus Estrela
