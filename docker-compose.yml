@@ -93,16 +93,14 @@ services:
         reservations:
           memory: 256M
 
-  # Node Service (for Vite)
+  # Node Service (Vite production build)
   node:
     build:
       context: ./docker/node
       dockerfile: Dockerfile
     container_name: laravel-node
-    restart: unless-stopped
+    restart: "no"
     working_dir: /var/www
-    ports:
-      - "5173:5173"
     volumes:
       - ./src:/var/www
       # Volume nomeado para cache do node_modules - evita reinstalar a cada restart
@@ -110,13 +108,11 @@ services:
     networks:
       - laravel-network
     environment:
-      - VITE_HOST=0.0.0.0
-      - VITE_PORT=5173
-      - NODE_ENV=development
-      # Limita heap do Node a 384MB para nao estourar a RAM do WSL2
-      - NODE_OPTIONS=--max-old-space-size=384
-    # --prefer-offline usa cache local do npm, muito mais rapido
-    command: [ "sh", "-c", "if [ -f package.json ]; then npm install --legacy-peer-deps --prefer-offline && npm run dev -- --host 0.0.0.0 --port 5173; else echo 'Waiting for package.json...'; tail -f /dev/null; fi" ]
+      - NODE_ENV=production
+      # Limita heap do Node a 512MB para o build de produção
+      - NODE_OPTIONS=--max-old-space-size=512
+    # Build de producao: instala deps e gera assets otimizados em public/build
+    command: [ "sh", "-c", "npm install --legacy-peer-deps --prefer-offline && npm run build && echo '✅ Frontend build de producao concluido!' && tail -f /dev/null" ]
     depends_on:
       - app
     stdin_open: true

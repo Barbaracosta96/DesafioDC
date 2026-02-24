@@ -38,6 +38,21 @@ fi
 echo "Running migrations..."
 php artisan migrate --force || echo "Warning: migrate had errors; check DB state"
 
+# Run seeders if DB is fresh (zero records in users table)
+USER_COUNT=$(php artisan tinker --execute="echo \\App\\Models\\User::count();" 2>/dev/null | tail -1 | tr -d '\r\n' || echo "0")
+if [ "$USER_COUNT" = "0" ]; then
+    echo "DB vazia - executando seeders..."
+    php artisan db:seed --force || echo "Warning: seed had errors"
+fi
+
+# Producao: gera caches de configuracao, rotas e views para maximo desempenho
+echo "Gerando caches de producao (config, route, view, events)..."
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan event:cache
+echo "✅ Caches gerados com sucesso!"
+
 # Reset permissions just in case
 if [ "$FIX_PERMISSIONS" = "true" ] || [ ! -d "/var/www/storage" ]; then
     echo "Fixing permissions..."
