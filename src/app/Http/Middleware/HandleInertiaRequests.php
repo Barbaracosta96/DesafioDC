@@ -30,18 +30,28 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = $request->user();
+
+        // Cache roles & permissions per user for 5 min — avoids 2 DB queries on every request
+        $authUser = null;
+        if ($user) {
+            $uid         = $user->id;
+            $roles       = cache()->remember("user_roles_{$uid}",       300, fn () => $user->getRoleNames());
+            $permissions = cache()->remember("user_permissions_{$uid}", 300, fn () => $user->getAllPermissions()->pluck('name'));
+
+            $authUser = [
+                'id'          => $user->id,
+                'name'        => $user->name,
+                'email'       => $user->email,
+                'avatar'      => $user->avatar,
+                'roles'       => $roles,
+                'permissions' => $permissions,
+            ];
+        }
+
         return [
             ...parent::share($request),
-            'auth' => [
-                'user' => $request->user() ? [
-                    'id'          => $request->user()->id,
-                    'name'        => $request->user()->name,
-                    'email'       => $request->user()->email,
-                    'avatar'      => $request->user()->avatar,
-                    'roles'       => $request->user()->getRoleNames(),
-                    'permissions' => $request->user()->getAllPermissions()->pluck('name'),
-                ] : null,
-            ],
+            'auth' => ['user' => $authUser],
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),
                 'error'   => fn () => $request->session()->get('error'),

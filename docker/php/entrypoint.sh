@@ -16,6 +16,13 @@ if [ ! -f "/var/www/.env" ]; then
     sed -i 's/# DB_DATABASE=laravel/DB_DATABASE=laravel/' /var/www/.env
     sed -i 's/# DB_USERNAME=root/DB_USERNAME=laravel/' /var/www/.env
     sed -i 's/# DB_PASSWORD=/DB_PASSWORD=secret/' /var/www/.env
+
+    # Performance: use file driver for cache & sessions (avoids extra DB queries per request)
+    sed -i 's/CACHE_STORE=database/CACHE_STORE=file/' /var/www/.env
+    sed -i 's/SESSION_DRIVER=database/SESSION_DRIVER=file/' /var/www/.env
+    # In case keys don't exist in .env.example, append them
+    grep -q "^CACHE_STORE=" /var/www/.env || echo "CACHE_STORE=file" >> /var/www/.env
+    grep -q "^SESSION_DRIVER=" /var/www/.env || echo "SESSION_DRIVER=file" >> /var/www/.env
 fi
 
 # Auto-setup: Dependencies
@@ -24,15 +31,22 @@ if [ ! -f "/var/www/vendor/autoload.php" ]; then
     composer install --no-progress --no-interaction --working-dir=/var/www
 fi
 
+# Always ensure performance-oriented drivers (safe to run even if .env exists)
+echo "Ensuring optimized cache/session drivers..."
+sed -i 's/^CACHE_STORE=.*/CACHE_STORE=file/' /var/www/.env 2>/dev/null || true
+sed -i 's/^SESSION_DRIVER=.*/SESSION_DRIVER=file/' /var/www/.env 2>/dev/null || true
+grep -q "^CACHE_STORE=" /var/www/.env 2>/dev/null || echo "CACHE_STORE=file" >> /var/www/.env
+grep -q "^SESSION_DRIVER=" /var/www/.env 2>/dev/null || echo "SESSION_DRIVER=file" >> /var/www/.env
+
 # Auto-setup: App Key
 if grep -q "APP_KEY=" /var/www/.env && [ -z "$(grep "APP_KEY=" /var/www/.env | cut -d '=' -f2)" ]; then
     echo "Generating application key..."
     php artisan key:generate
 fi
 
-# Auto-setup: Migrations (Wait for DB)
-echo "Running migrations..."
-php artisan migrate --force
+# Auto-setup: Migrations
+echo "Checking and running migrations..."
+php artisan migrate --force --no-interaction
 
 # Auto-setup: Seed only on first boot
 if [ ! -f "/var/www/storage/.seeded" ]; then
@@ -45,6 +59,12 @@ if [ ! -L "/var/www/public/storage" ]; then
     echo "Creating storage symlink..."
     php artisan storage:link
 fi
+
+# Cache config, routes, views — eliminates 200+ file reads per request
+echo "Warming up application caches (config + routes + views)..."
+php artisan optimize:clear --quiet
+php artisan optimize
+php artisan event:cache 2>/dev/null || true
 
 # Reset permissions just in case
 if [ "$FIX_PERMISSIONS" = "true" ] || [ ! -d "/var/www/storage" ]; then

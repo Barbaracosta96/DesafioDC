@@ -46,6 +46,8 @@ class UserController extends Controller
         ]);
 
         $user->assignRole($request->role);
+        cache()->forget("user_roles_{$user->id}");
+        cache()->forget("user_permissions_{$user->id}");
 
         return redirect()->route('users.index')
             ->with('success', 'Usuário criado com sucesso!');
@@ -69,15 +71,19 @@ class UserController extends Controller
 
         $user->update($data);
         $user->syncRoles([$request->role]);
+        cache()->forget("user_roles_{$user->id}");
+        cache()->forget("user_permissions_{$user->id}");
 
         return redirect()->route('users.index')
             ->with('success', 'Usuário atualizado com sucesso!');
     }
 
-    public function destroy(User $user): RedirectResponse
+    public function destroy(Request $request, User $user): RedirectResponse
     {
-        abort_if($user->id === auth()->id(), 403, 'Você não pode remover sua própria conta.');
+        abort_if($user->id === $request->user()?->id, 403, 'Você não pode remover sua própria conta.');
 
+        cache()->forget("user_roles_{$user->id}");
+        cache()->forget("user_permissions_{$user->id}");
         $user->delete();
 
         return redirect()->route('users.index')

@@ -15,14 +15,19 @@ services:
       - laravel-network
     depends_on:
       - db
+    environment:
+      - PHP_OPCACHE_ENABLE=1
+      - PHP_OPCACHE_VALIDATE_TIMESTAMPS=0
+      - CACHE_STORE=file
+      - SESSION_DRIVER=file
     deploy:
       resources:
         limits:
-          cpus: '0.75'
-          memory: 512M
+          cpus: '2.0'
+          memory: 768M
         reservations:
-          cpus: '0.25'
-          memory: 256M
+          cpus: '0.5'
+          memory: 384M
 
   # Nginx Service
   webserver:
@@ -44,11 +49,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.25'
-          memory: 128M
+          cpus: '0.5'
+          memory: 256M
         reservations:
-          cpus: '0.10'
-          memory: 64M
+          cpus: '0.15'
+          memory: 128M
 
   # MySQL Service
   db:
@@ -65,6 +70,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
       - ./docker/mysql/init:/docker-entrypoint-initdb.d
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/performance.cnf:ro
     networks:
       - laravel-network
     healthcheck:
@@ -76,11 +82,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.75'
-          memory: 768M
+          cpus: '1.0'
+          memory: 1024M
         reservations:
           cpus: '0.25'
-          memory: 256M
+          memory: 512M
 
   # Node Service (for Vite)
   node:

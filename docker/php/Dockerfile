@@ -32,6 +32,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy custom PHP configuration
 COPY php.ini /usr/local/etc/php/conf.d/custom.ini
 
+# Copy PHP-FPM pool tuning
+COPY zz-performance.conf /usr/local/etc/php-fpm.d/zz-performance.conf
+
 # Copy entrypoint and permission fix scripts
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY fix-permissions.sh /usr/local/bin/fix-permissions.sh
