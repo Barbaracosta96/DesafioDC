@@ -19,9 +19,9 @@ if [ ! -f "/var/www/.env" ]; then
 fi
 
 # Auto-setup: Dependencies
-if [ ! -d "/var/www/vendor" ]; then
+if [ ! -f "/var/www/vendor/autoload.php" ]; then
     echo "Installing dependencies..."
-    composer install --no-progress --no-interaction
+    composer install --no-progress --no-interaction --working-dir=/var/www
 fi
 
 # Auto-setup: App Key

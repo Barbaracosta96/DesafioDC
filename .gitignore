@@ -36,3 +36,9 @@ yarn-error.log*
 
 # Claude
 .claude/
+
+# Debug / temp files
+/src/check_perms.php
+/src/check_perms2.php
+/src/composer_output.txt
+/src/storage/.seeded

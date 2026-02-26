@@ -10,12 +10,19 @@ services:
     volumes:
       - ./src:/var/www
       - ./docker/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
-      - ./docker/php/entrypoint.sh:/usr/local/bin/entrypoint.sh
       - ./tests:/var/www/tests
     networks:
       - laravel-network
     depends_on:
       - db
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   # Nginx Service
   webserver:
@@ -34,6 +41,14 @@ services:
       - laravel-network
     depends_on:
       - app
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+        reservations:
+          cpus: '0.10'
+          memory: 64M
 
   # MySQL Service
   db:
@@ -58,6 +73,14 @@ services:
       timeout: 10s
       retries: 20
       start_period: 90s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 768M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   # Node Service (for Vite)
   node:
@@ -76,11 +99,19 @@ services:
     environment:
       - VITE_HOST=0.0.0.0
       - VITE_PORT=5173
-    command: [ "sh", "-c", "if [ -f package.json ]; then if [ ! -d node_modules ]; then npm install; fi; npm run dev -- --host; else echo 'Waiting for package.json...'; tail -f /dev/null; fi" ]
+    command: [ "sh", "-c", "if [ -f package.json ]; then if [ ! -d node_modules ]; then npm install; fi; npm run build && echo 'Build complete!'; else echo 'No package.json found'; fi; tail -f /dev/null" ]
     depends_on:
       - app
     stdin_open: true
     tty: true
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.10'
+          memory: 128M
 
 # Docker Networks
 networks:
