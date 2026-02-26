@@ -11,6 +11,10 @@ use Inertia\Response;
 
 class CustomerController extends Controller
 {
+    public function __construct()
+    {
+    }
+
     public function index(Request $request): Response
     {
         $customers = Customer::withCount('sales')

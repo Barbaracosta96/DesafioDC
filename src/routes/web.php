@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 use App\Models\User;
 
@@ -47,5 +48,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', UserController::class)
         ->except(['show'])
         ->middleware('role:admin');
+
+    // Leaderboard
+    Route::get('/leaderboard', fn () => Inertia::render('Leaderboard/Index'))->name('leaderboard');
+
+    // Settings
+    Route::get('/settings', fn () => Inertia::render('Settings/Index'))->name('settings');
 });
 

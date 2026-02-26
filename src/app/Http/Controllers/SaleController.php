@@ -64,6 +64,8 @@ class SaleController extends Controller
 
     public function updateStatus(Request $request, Sale $sale): RedirectResponse
     {
+        $this->authorize('updateStatus', $sale);
+
         $request->validate(['status' => ['required', 'in:pending,completed,cancelled']]);
 
         $this->saleService->updateStatus($sale, $request->status);
