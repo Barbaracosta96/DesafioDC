@@ -35,8 +35,10 @@ fi
 echo "Ensuring optimized cache/session drivers..."
 sed -i 's/^CACHE_STORE=.*/CACHE_STORE=file/' /var/www/.env 2>/dev/null || true
 sed -i 's/^SESSION_DRIVER=.*/SESSION_DRIVER=file/' /var/www/.env 2>/dev/null || true
+sed -i 's/^APP_ENV=.*/APP_ENV=production/' /var/www/.env 2>/dev/null || true
 grep -q "^CACHE_STORE=" /var/www/.env 2>/dev/null || echo "CACHE_STORE=file" >> /var/www/.env
 grep -q "^SESSION_DRIVER=" /var/www/.env 2>/dev/null || echo "SESSION_DRIVER=file" >> /var/www/.env
+grep -q "^APP_ENV=" /var/www/.env 2>/dev/null || echo "APP_ENV=production" >> /var/www/.env
 
 # Auto-setup: App Key
 if grep -q "APP_KEY=" /var/www/.env && [ -z "$(grep "APP_KEY=" /var/www/.env | cut -d '=' -f2)" ]; then
