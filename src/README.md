@@ -8,6 +8,7 @@
 
 - [Tecnologias](#tecnologias)
 - [Início Rápido](#início-rápido)
+- [Acessos de Demonstração](#acessos-de-demonstração)
 - [Módulos e Funcionalidades](#módulos-e-funcionalidades)
 - [ACL — Papéis e Permissões](#acl--papéis-e-permissões)
 - [Diagrama ER](#diagrama-er)
@@ -57,6 +58,22 @@ O primeiro boot executa automaticamente via `entrypoint.sh`:
 5. `php artisan storage:link`
 
 Aplicação disponível em **http://localhost:8081**
+
+---
+
+## Acessos de Demonstração
+
+> Criados automaticamente pelo `DemoDataSeeder` ao subir o ambiente.
+
+| Perfil | E-mail | Senha | Permissões |
+|---|---|---|---|
+| 👑 Admin | `admin@dabang.app` | `password` | Acesso total — todos os módulos, gestão de usuários |
+| ✏️ Editor | `editor@dabang.app` | `password` | Dashboard, Produtos (criar/editar), Vendas, Clientes |
+| 👤 User | `user@dabang.app` | `password` | Dashboard, visualizar Produtos/Vendas/Clientes, criar Vendas |
+
+> **URL de acesso:** http://localhost:8081/login
+
+---
 
 ### Build dos assets
 
